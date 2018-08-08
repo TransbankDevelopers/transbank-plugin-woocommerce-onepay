@@ -263,16 +263,6 @@ class Onepay extends WC_Payment_Gateway {
 
 		$response = "response";
 
-		//error_log(wp_remote_retrieve_response_message($response));
-		// if ( is_wp_error( $response ) ) {
-		// 	$error_message = $response->get_error_message();
-		// 	wc_add_notice( __('Payment error: ', 'woothemes') . "Not Yet Implemented - ".$error_message, 'error' );
-		// 	wc_add_notice( __('Payment error: ', 'woothemes') . "Not Yet Implemented - ".var_dump($response), 'error' );
-		//  } else {
-		// 	$json = json_decode($response['body']);
-		// 	$access_token = $json->access_token;
-		//  }
-
 		return;
 	}
 
