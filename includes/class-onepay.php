@@ -82,7 +82,7 @@ class Onepay extends WC_Payment_Gateway {
         $this->id                 = 'onepay';
         $this->title              = __( 'Onepay', 'onepay' );
         $this->description        = __( 'This is the payment gateway description', 'onepay' );
-		$this->icon               = apply_filters('woocommerce_Onepay_icon', '');
+		$this->icon               = apply_filters('woocommerce_Onepay_icon', plugin_dir_url( dirname( __FILE__ ) ) . 'public/images/logo_onepay.png');
 		$this->has_fields         = true;
 		$this->method_title       = __( 'Onepay', 'onepay' );
 		$this->method_description = __( 'This is the payment gateway description', 'onepay' );
@@ -248,22 +248,11 @@ class Onepay extends WC_Payment_Gateway {
 
 
 	function payment_fields(){
-		woocommerce_form_field( 'onepay_payment_method', array(
-			'type'          => 'select',
-			'class'         => array( 'payment_method' ),
-			'label'         => __( 'To continue, please select a payment method:' ),
-			'options'       => array(
-				'blank'		=> __( '', 'onepay' )
-			)
-			));
+        echo wpautop( wptexturize( "¡Paga con Onepay! En la siguiente pantalla podrás escanear el código QR, o ingresar el código de compra." ) );
 	}
 
 	function validate_fields() {
 		$is_valid = parent::validate_fields();
-		if ($_POST['onepay_payment_method'] == "blank"){
-			wc_add_notice( '<strong>Please select a Payment Method</strong>', 'error' );
-			$is_valid = false;
-		}
 
 		return $is_valid;
 	}
@@ -274,31 +263,7 @@ class Onepay extends WC_Payment_Gateway {
 
 		$response = "response";
 
-		error_log(wp_remote_retrieve_response_message($response));
-		if ( is_wp_error( $response ) ) {
-			$error_message = $response->get_error_message();
-			wc_add_notice( __('Payment error: ', 'woothemes') . "Not Yet Implemented - ".$error_message, 'error' );
-			wc_add_notice( __('Payment error: ', 'woothemes') . "Not Yet Implemented - ".var_dump($response), 'error' );
-		 } else {
-			$json = json_decode($response['body']);
-			$access_token = $json->access_token;
-			wc_setcookie("access_token", $access_token);
-			wc_setcookie("order_id", $order_id);
-
-			$payment_method = $_POST['onepay_payment_method'];
-
-		 }
-
 		return;
-	}
-
-	/**
-	 * UNUSED
-	 */
-	function checkout_field_process(){
-		if ($_POST['onepay_payment_method'] == "blank"){
-			wc_add_notice( '<strong>Please select a Payment Method</strong>', 'error' );
-		}
 	}
 
 	/**

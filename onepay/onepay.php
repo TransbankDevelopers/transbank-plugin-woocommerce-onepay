@@ -31,7 +31,7 @@ function Onepay_init() {
 	     */
 	    public function __construct() {
 			$this->id                 = 'Onepay';
-			$this->icon               = apply_filters('woocommerce_Onepay_icon', '');
+			$this->icon               = apply_filters('woocommerce_Onepay_icon', plugin_dir_url( dirname( __FILE__ ) ) . 'public/images/logo_onepay.png');
 			$this->has_fields         = false;
 			$this->method_title       = __( 'Onepay', 'onepay' );
 			$this->method_description = __( 'This is the payment gateway description', 'onepay' );
