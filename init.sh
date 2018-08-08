@@ -18,3 +18,10 @@ wp db query "UPDATE wp_options SET option_value='7500000' WHERE option_name='woo
 wp db query "UPDATE wp_options SET option_value=0 WHERE option_name='woocommerce_price_num_decimals';"
 wp db query "UPDATE wp_options SET option_value='.' WHERE option_name='woocommerce_price_thousand_sep';"
 wp db query "UPDATE wp_options SET option_value=',' WHERE option_name='woocommerce_price_decimal_sep';"
+
+wp config set WP_DEBUG true
+wp config set --add --type=constant WP_DEBUG_LOG true
+wp config set --add --type=constant WP_DEBUG_DISPLAY false
+wp config set --add --type=constant WPS_DEBUG true
+wp config set --add --type=constant WPS_DEBUG_SCRIPTS true
+wp config set --add --type=constant WPS_DEBUG_STYLES true
