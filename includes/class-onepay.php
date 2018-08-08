@@ -1,5 +1,7 @@
 <?php
 
+use Transbank\Onepay\OnepayBase;
+
 /**
  * The file that defines the core plugin class
  *
@@ -134,6 +136,12 @@ class Onepay extends WC_Payment_Gateway {
 	 */
 	private function load_dependencies() {
 
+        /**
+         * The class responsible for loading external dependencies of the
+         * core plugin.
+         */
+
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'vendor/autoload.php';
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
@@ -246,19 +254,21 @@ class Onepay extends WC_Payment_Gateway {
 	        );
 	    }
 
-
 	function payment_fields(){
         echo wpautop( wptexturize( "¡Paga con Onepay! En la siguiente pantalla podrás escanear el código QR, o ingresar el código de compra." ) );
 	}
 
 	function validate_fields() {
-		$is_valid = parent::validate_fields();
-
+        $is_valid = parent::validate_fields();
 		return $is_valid;
 	}
 
 	public function process_payment( $order_id ) {
-		global $woocommerce;
+        global $woocommerce;
+
+        OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
+        OnepayBase::setApiKey($this->get_option( 'apikey' ));
+
 		$order = new WC_Order( $order_id );
 
 		$response = "response";
