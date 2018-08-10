@@ -269,13 +269,13 @@ class Onepay extends WC_Payment_Gateway {
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
 
-        $order = new WC_Order( $order_id );
-        $order->update_status('processing', __( 'Awaiting onepay payment', 'onepay' ));
+        //$order = new WC_Order( $order_id );
+        //$order->update_status('processing', __( 'Awaiting onepay payment', 'onepay' ));
 
         // TODO missing correct URL redirection
         return array(
             'result'    => 'success',
-            'redirect'  => ""
+            'redirect'  => plugin_dir_url( dirname( __FILE__ ) ) . 'public/pago/pagar.php'
         );
 	}
 
