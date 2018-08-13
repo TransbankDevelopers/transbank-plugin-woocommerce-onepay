@@ -59,6 +59,7 @@ global $woocommerce, $post, $order;
                                     occ: occ,
                                     externalUniqueNumber: externalUniqueNumber
                                 };
+                                sendPostRedirect("commit.php", params);
 
                             },
                             canceled: function () {
@@ -84,8 +85,34 @@ global $woocommerce, $post, $order;
                 });
 
             });
-        </script>
 
+
+        function sendPostRedirect (destination, params) {
+            var form = document.createElement("form");
+            form.method = "POST";
+            form.action = destination;
+
+            Object.keys(params).forEach(function (key) {
+                var param = document.createElement("input");
+                param.type = "hidden";
+                param.name = key;
+                param.value = params[key];
+                form.appendChild(param);
+            });
+
+            var submit = document.createElement("input");
+            submit.type = "submit";
+            submit.name = "submitButton";
+            submit.style.display = "none";
+
+            form.appendChild(submit);
+            document.body.appendChild(form);
+            form.submit();
+        };
+
+
+        </script>
+        Aquí debería aparecer el QR:
         <div id="qr"></div>
     </body>
 </html>
