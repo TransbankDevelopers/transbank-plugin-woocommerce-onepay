@@ -264,14 +264,17 @@ class Onepay extends WC_Payment_Gateway {
 	}
 
 	public function process_payment( $order_id ) {
-        global $woocommerce;
+        global $woocommerce, $post;
 
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
 
-        //$order = new WC_Order( $order_id );
-        //$order->update_status('processing', __( 'Awaiting onepay payment', 'onepay' ));
 
+        $order = new WC_Order( $order_id );
+        var_dump($order);
+        var_dump($post);
+        //$order->update_status('processing', __( 'Awaiting onepay payment', 'onepay' ));
+        WC()->session->set('order_id', $order_id);
         // TODO missing correct URL redirection
         return array(
             'result'    => 'success',

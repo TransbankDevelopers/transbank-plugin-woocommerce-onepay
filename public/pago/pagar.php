@@ -8,7 +8,9 @@ use Transbank\Onepay\Transaction;
 use Transbank\Onepay\OnepayBase;
 
 global $woocommerce, $post, $order;
-//$order = new WC_Order($post->ID);
+
+var_dump($order);
+echo "order id is " . WC()->session->get('order_id');
 
 //echo WC()->cart->
 

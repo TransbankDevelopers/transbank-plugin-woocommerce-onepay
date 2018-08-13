@@ -7,13 +7,9 @@
 
 <?php
 require(dirname(__FILE__, 6) .'/wp-blog-header.php');
-
-
-    use Transbank\Onepay\TransactionCommitResponse;
-    use Transbank\Onepay\TransactionCommitRequest;
     use Transbank\Onepay\Transaction;
     use Transbank\Onepay\OnepayBase;
-
+    global $woocommerce, $order;
 
     OnepayBase::setSharedSecret("P4DCPS55QB2QLT56SQH6#W#LV76IAPYX");
     OnepayBase::setApiKey("mUc0GxYGor6X8u-_oB3e-HWJulRG01WoC96-_tUA3Bg");
