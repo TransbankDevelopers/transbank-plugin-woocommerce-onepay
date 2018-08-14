@@ -9,19 +9,58 @@ use Transbank\Onepay\OnepayBase;
 
 global $woocommerce, $post, $order;
 
-var_dump($order);
-echo "order id is " . WC()->session->get('order_id');
-
-//echo WC()->cart->
-
  ?>
 
 <html>
     <head>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
     <body>
 
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md">
+        Listado de productos
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">Producto</th>
+                    <th scope="col"></th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                <?php
+                foreach ( WC()->cart->get_cart() as $cart_item ) {
+                    $nombre = $cart_item['data']->get_title();
+                    $cantidad = intval($cart_item['quantity']);
+                    $precio = intval($cart_item['data']->get_price());
+                    $imagen = $cart_item['data']->get_image('woocommerce_gallery_thumbnail');
+
+                    echo '<tr>';
+                    echo '<td class="align-middle">'.$imagen.'</td>';
+                    echo '<td class="align-middle">'.$nombre.'</td>';
+                    echo '<td class="align-middle">$'.$precio.'</td>';
+                    echo '<td class="align-middle">'.$cantidad.'</td>';
+                    echo '<td class="align-middle" >$'.($precio*$cantidad).'</td>';
+                    echo '</tr>';
+                }
+                ?>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm">
+            Aquí debería aparecer el QR:
+            <div id="qr"></div>
+        </div>
+
+      </div>
         <script>
         (function (o, n, e, p, a, y) {
             var s = n.createElement(p);
@@ -114,7 +153,8 @@ echo "order id is " . WC()->session->get('order_id');
 
 
         </script>
-        Aquí debería aparecer el QR:
-        <div id="qr"></div>
+
+
+        </div>
     </body>
 </html>
