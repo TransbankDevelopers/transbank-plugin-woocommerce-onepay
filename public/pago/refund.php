@@ -24,7 +24,7 @@ function refund($order_id, $refund_reason = 'Customer requested refund') {
         $refundResponse = Refund::create($_GET['amount'], $_GET['occ'], $_GET['externalUniqueNumber'], $_GET['authorizationCode']);
 
         if($refundResponse->getResponseCode() == 'OK') {
-            echo "Success!";
+
 
 
             // Get Items
@@ -54,31 +54,89 @@ function refund($order_id, $refund_reason = 'Customer requested refund') {
                 }
             }
 
-            $refund = wc_create_refund( array(
+            wc_create_refund( array(
                 'amount'         => $refund_amount,
                 'reason'         => $refund_reason,
                 'order_id'       => $order_id,
                 'line_items'     => $line_items,
                 'refund_payment' => false # False because we do the refund manually on Transbank
             ) );
-            return $refund;
+
+            return "
+                
+              <h3 class=\"text-center\">Tu transacción fue reversada exitosamente.</h3>
+              <h4 class=\"text-center\">Detalle de transacción: </h4>
+            
+            ";
         }
     } catch (RefundCreateException $exception) {
-        echo "Already refunded on Transbank";
+        return "   
+              <h3 class=\"text-center\">Tu transacción ya ha sido reversada o no se pudo reversar por un error del servicio.</h3>
+              <h4 class=\"text-center\">Detalle de transacción: </h4>
+            ";
     }
 }
 
 
+$transactionResult = refund(WC()->session->get('order_id'));
+?>
 
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        .onepay-logo-container {
+            margin:auto;
+            width: 120px;
+        }
+        .onepay-logo-img {
+            width: 120px;
+            margin:auto;
+        }
 
+    </style>
+</head>
+<body>
+<div class="onepay-logo-container">
+    <img class="onepay-logo-img"
+         src= <?php echo plugin_dir_url( dirname( __FILE__ ) ) . "../public/images/img_onepay.png" ?>>
+</div>
+<div class="container border">
+    <?php echo $transactionResult ?>
+      <div class="row">
+        <div class="col-md">
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">Producto</th>
+                    <th scope="col"></th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
 
+                <?php
+                foreach ( WC()->cart->get_cart() as $cart_item ) {
+                    $nombre = $cart_item['data']->get_title();
+                    $cantidad = intval($cart_item['quantity']);
+                    $precio = intval($cart_item['data']->get_price());
+                    $imagen = $cart_item['data']->get_image('woocommerce_gallery_thumbnail');
 
-echo "jajajaj soy php\n";
+                    echo '<tr>';
+                    echo '<td class="align-middle">'.$imagen.'</td>';
+                    echo '<td class="align-middle">'.$nombre.'</td>';
+                    echo '<td class="align-middle">$'.$precio.'</td>';
+                    echo '<td class="align-middle">'.$cantidad.'</td>';
+                    echo '<td class="align-middle" >$'.($precio*$cantidad).'</td>';
+                    echo '</tr>';
+                }
+                ?>
 
-echo "amount = " . $_GET['amount'] . "\n";
-echo "occ = " . $_GET['occ'] . "\n";
-echo "EUN = " . $_GET['externalUniqueNumber'] . "\n";
-echo "Auth code = " . $_GET['authorizationCode'] . "\n";
-echo "ORDER ID = " . WC()->session->get('order_id') . "\n";
-
-var_dump(  refund(WC()->session->get('order_id')) );
+                </tbody>
+            </table>
+        </div>
+      </body>
+</html>
