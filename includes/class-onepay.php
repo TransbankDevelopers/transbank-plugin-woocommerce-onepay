@@ -3,6 +3,8 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
+define("MYCONST", "CONST");
+
 use Transbank\Onepay\OnepayBase;
 
 /**
@@ -110,9 +112,6 @@ class Onepay extends WC_Payment_Gateway {
             'refunds'
 		  );
 
-		// Load the settings.
-		$this->init_form_fields();
-		$this->init_settings();
 
 		 // Define user set variables
 		 $this->apikey         = $this->get_option( 'apikey' );
@@ -121,6 +120,9 @@ class Onepay extends WC_Payment_Gateway {
 		 // Actions
 		 add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		 add_action( 'woocommerce_thankyou_Onepay', array( $this, 'thankyou_page' ) );
+        // Load the settings.
+        $this->init_form_fields();
+        $this->init_settings();
 
 		 add_action('woocommerce_api_'.strtolower(get_class($this)), array($this, 'callback_handler'));
 	//	 add_action( 'woocommerce_checkout_process', array( $this,'checkout_field_process'));
@@ -246,7 +248,6 @@ class Onepay extends WC_Payment_Gateway {
 	     */
 	    public function init_form_fields() {
 	        $this->form_fields = array(
-
 	            'enabled' => array(
 	                'title' => __( 'Activa/Desactiva', 'onepay' ),
 	                'type' => 'checkbox',
@@ -271,20 +272,22 @@ class Onepay extends WC_Payment_Gateway {
                       'Production' => __( 'Producción', 'onepay' )
      				)
 				),
-                'generate_pdf' => array(
+                'genpdf' =>
+                    array(
+                    'type' => 'button',
                     'title' => __('Generar PDF', 'onepay'),
                     'label' => __('Generar PDF de Diagnostico', 'onepay'),
-                    'id' => 'generate_pdf',
-                    'type' => 'button',
-                    'description'       => __( 'Genera un PDF con información sobre el entorno del plugin.', 'onepay' ),
+                    'description' => __( 'Genera un PDF con información sobre el entorno del plugin', 'onepay' ),
                     'desc_tip' => true,
+                    'default' => __( 'Generar PDF', 'onepay' ),
+                    'placeholder' => __( 'Generar PDF', 'onepay' ),
+                    'value' =>__( 'Generar PDF', 'onepay' ),
                     'custom_attributes' => array(
-                        'onclick' => "location.href='". plugin_dir_url( dirname( __FILE__ ) ) . 'admin/diagnostic_pdf.php\''
+                        'onclick' => "location.href='". plugin_dir_url( dirname( __FILE__ ) ) . 'admin/diagnostic_pdf.php\'',
+                        'value' => __( 'Generar PDF', 'onepay' )
                     ),
-                    'default' => '<span> hola </span>',
-                    'options' => array("Value" => "asdasd"),
-                    'return' => "asdasd"
-                )
+
+                ),
 
 	        );
 	    }
@@ -303,9 +306,6 @@ class Onepay extends WC_Payment_Gateway {
 
         $shared_secret = $this->get_option( 'shared_secret' );
         $api_key = $this->get_option( 'apikey' );
-
-        echo "API KEY " . $api_key;
-        echo "SHARED SECRET " . $shared_secret;
 
         OnepayBase::setSharedSecret($shared_secret);
         OnepayBase::setApiKey($api_key);
