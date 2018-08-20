@@ -32,6 +32,8 @@ if ( ! defined( 'WPINC' ) ) {
 
 define( 'PLUGIN_NAME_VERSION', '1.0.0' );
 
+
+
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-onepay-activator.php

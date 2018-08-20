@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 /**
  * Register all actions and filters for the plugin
  *
@@ -123,6 +125,16 @@ class Onepay_Loader {
 		foreach ( $this->actions as $hook ) {
 			add_action( $hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args'] );
 		}
+
+
+
+
+
+
+
+
+
+
 
 	}
 

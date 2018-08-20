@@ -10,6 +10,7 @@ services:
     environment:
       WOOCOMMERCE_VERSION: 2.5.5
       WORDPRESS_DB_PASSWORD: example
+      WORDPRESS_DEBUG: 1
     depends_on:
       - dbserver
     ports:

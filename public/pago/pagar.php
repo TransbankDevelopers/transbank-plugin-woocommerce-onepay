@@ -1,11 +1,10 @@
 <?php
+
 require(dirname(__FILE__, 6) .'/wp-blog-header.php');
 require(dirname(__FILE__, 6) .'/wp-load.php');
-
-use Transbank\Onepay\ShoppingCart;
-use Transbank\Onepay\Item;
-use Transbank\Onepay\Transaction;
-use Transbank\Onepay\OnepayBase;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 global $woocommerce, $post, $order;
 
@@ -85,6 +84,7 @@ global $woocommerce, $post, $order;
                     async: true,
                     success: function(data) {
                         // convert json to object
+                        console.log(data)
                         var transaction = JSON.parse(data);
                         transaction["paymentStatusHandler"] = {
                             ottAssigned: function () {

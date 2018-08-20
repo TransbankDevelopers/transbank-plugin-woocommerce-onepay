@@ -1,5 +1,7 @@
 <?php
-
+/*if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}*/
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -48,7 +50,6 @@ class Onepay_Admin {
 	 * @param      string    $version    The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
-
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
@@ -99,5 +100,4 @@ class Onepay_Admin {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/onepay-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
-
 }

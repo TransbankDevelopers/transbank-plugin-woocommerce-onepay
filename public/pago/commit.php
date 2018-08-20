@@ -6,6 +6,7 @@
 <!--[if (gt IE 9)|!(IE)]><!--><html lang="en" class="no-js"><!--<![endif]-->
 
 <?php
+
 require(dirname(__FILE__, 6) .'/wp-blog-header.php');
     use Transbank\Onepay\Transaction;
     use Transbank\Onepay\OnepayBase;
@@ -127,7 +128,8 @@ require(dirname(__FILE__, 6) .'/wp-blog-header.php');
             </div>
             <div>
                 <div class="transaction-commit-info-title">Fecha:</div>
-                <div> <?php echo $transactionCommitResponse->getIssuedAt() ?> </div>
+
+                <div> <?php echo gmdate("d-m-Y", $transactionCommitResponse->getIssuedAt()); ?> </div>
             </div>
             <div>
                 <div class="transaction-commit-info-title">Anulación</div>

@@ -1,5 +1,7 @@
 <?php
-
+/*if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}*/
 /**
  * The public-facing functionality of the plugin.
  *
@@ -53,7 +55,6 @@ class Onepay_Public {
 		$this->version = $version;
 
 	}
-
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
@@ -99,5 +100,6 @@ class Onepay_Public {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/onepay-public.js', array( 'jquery' ), $this->version, false );
 
 	}
+
 
 }

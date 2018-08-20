@@ -1,7 +1,6 @@
 <?php
-
 require(dirname(__FILE__, 6) .'/wp-blog-header.php');
-
+require(dirname(__FILE__, 6) .'/wp-load.php');
 use Transbank\Onepay\ShoppingCart;
 use Transbank\Onepay\Item;
 use Transbank\Onepay\Transaction;
