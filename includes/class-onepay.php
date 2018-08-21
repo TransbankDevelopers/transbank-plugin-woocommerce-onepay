@@ -4,7 +4,9 @@ if (! defined('ABSPATH')) {
 }
 
 use Transbank\Onepay\OnepayBase;
-
+use Transbank\Onepay\ShoppingCart;
+use Transbank\Onepay\Item;
+use Transbank\Onepay\Transaction;
 /**
  * The file that defines the core plugin class
  *
@@ -93,10 +95,14 @@ class Onepay extends WC_Payment_Gateway {
 
         $this->plugin_name = 'onepay';
 
-        $this->load_dependencies();
-        $this->set_locale();
-        $this->define_admin_hooks();
+		$this->load_dependencies();
+		$this->set_locale();
+		$this->define_admin_hooks();
         $this->define_public_hooks();
+
+        // Load the settings.
+        $this->init_form_fields();
+        $this->init_settings();
 
         $this->id                 = 'onepay';
         $this->title              = __( 'Onepay', 'onepay' );
@@ -110,51 +116,119 @@ class Onepay extends WC_Payment_Gateway {
 		  );
 
 
-		 // Define user set variables
-		 $this->apikey         = $this->get_option( 'apikey' );
-		 $this->shared_secret   = $this->get_option( 'shared_secret' );
+        // Define user set variables
+        $this->apikey         = $this->get_option( 'apikey' );
+        $this->shared_secret   = $this->get_option( 'shared_secret' );
 
-		 // Actions
-		 add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-		 add_action( 'woocommerce_thankyou_Onepay', array( $this, 'thankyou_page' ) );
-        // Load the settings.
-        $this->init_form_fields();
-        $this->init_settings();
+        // Actions
+        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+        add_action( 'woocommerce_api_'.strtolower(get_class($this)), array($this, 'callback_handler'));
 
-         add_action('woocommerce_api_'.strtolower(get_class($this)), array($this, 'callback_handler'));
-    //	 add_action( 'woocommerce_checkout_process', array( $this,'checkout_field_process'));
+        add_action( 'rest_api_init', function () {
+            register_rest_route( 'onepay/v1', '/transaction', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'create_transaction'),
+            ));
 
+            register_rest_route( 'onepay/v1', '/commit', array(
+                'methods' => 'GET',
+                'callback' => array($this, 'commit_transaction'),
+            ));
+        });
 
-         self::$instance = $this;
+        self::$instance = $this;
     }
 
-    function callback_handler() {
-        //Handle the thing here!
-        global $woocommerce;
-        @ob_clean();
+    function commit_transaction($data) {
 
-        wp_redirect($order->get_shipping_first_name());
-        error_log('handle');
+        $order_id = WC()->session->get('order_id');
+        $externalUniqueNumber = $data['externalUniqueNumber'];
+        $transactionCommitResponse = Transaction::commit($data['occ'], $externalUniqueNumber);
+        $order = new WC_Order($order_id);
 
-      }
+        if($transactionCommitResponse->getResponseCode() == 'OK') {
+            $order->update_status('completed');
+            $order->payment_complete();
+            update_post_meta($order_id, 'occ', $transactionCommitResponse->getOcc());
+            update_post_meta($order_id, 'externalUniqueNumber', $externalUniqueNumber);
+            update_post_meta($order_id, 'buyOrder', $transactionCommitResponse->getBuyOrder());
+            update_post_meta($order_id, 'description', $transactionCommitResponse->getDescription());
+            update_post_meta($order_id, 'amount', $transactionCommitResponse->getAmount());
+            update_post_meta($order_id, 'installmentsNumber', $transactionCommitResponse->getInstallmentsNumber());
+            update_post_meta($order_id, 'installmentsAmount', $transactionCommitResponse->getInstallmentsAmount());
+            update_post_meta($order_id, 'issuedAt', $transactionCommitResponse->getIssuedAt());
+            update_post_meta($order_id, 'authorizationCode', $transactionCommitResponse->getAuthorizationCode());
+            update_post_meta($order_id, 'signature', $transactionCommitResponse->getSignature());
 
-    /**
-     * Load the required dependencies for this plugin.
-     *
-     * Include the following files that make up the plugin:
-     *
-     * - Onepay_Loader. Orchestrates the hooks of the plugin.
-     * - Onepay_i18n. Defines internationalization functionality.
-     * - Onepay_Admin. Defines all hooks for the admin area.
-     * - Onepay_Public. Defines all hooks for the public side of the site.
-     *
-     * Create an instance of the loader which will be used to register the hooks
-     * with WordPress.
-     *
-     * @since    1.0.0
-     * @access   private
-     */
-    private function load_dependencies() {
+            } else {
+                $order->update_status('cancelled');
+            }
+
+        WC()->session->set('order_id', null);
+
+        if ( wp_redirect($order->get_checkout_order_received_url()) ) {
+            exit;
+        }
+    }
+
+    function create_transaction($data) {
+        $carro = new ShoppingCart();
+
+        foreach ( WC()->cart->get_cart() as $cart_item ) {
+            $nombre = $cart_item['data']->get_title();
+            $cantidad = $cart_item['quantity'];
+            $precio = intval($cart_item['data']->get_price());
+
+            $item = new Item($nombre, $cantidad, $precio);
+            $carro->add($item);
+        }
+
+        if (WC()->cart->get_shipping_total() != 0) {
+            $item = new Item("Costo por envio", 1, intval(WC()->cart->get_shipping_total()));
+            $carro->add($item);
+        }
+
+        $transaction = Transaction::create($carro);
+        $response = [];
+
+        $response['occ'] = $transaction->getOcc();
+        $response['ott'] = $transaction->getOtt();
+        $response['externalUniqueNumber'] = $transaction->getExternalUniqueNumber();
+        $response['qrCodeAsBase64'] = $transaction->getQrCodeAsBase64();
+        $response['issuedAt'] = $transaction->getIssuedAt();
+        $response['signature'] = $transaction->getSignature();
+        $response['amount'] = $carro->getTotal();
+
+        return $response;
+    }
+
+	function callback_handler() {
+		//Handle the thing here!
+		global $woocommerce;
+		@ob_clean();
+
+		wp_redirect($order->get_shipping_first_name());
+		error_log('handle');
+
+	  }
+
+	/**
+	 * Load the required dependencies for this plugin.
+	 *
+	 * Include the following files that make up the plugin:
+	 *
+	 * - Onepay_Loader. Orchestrates the hooks of the plugin.
+	 * - Onepay_i18n. Defines internationalization functionality.
+	 * - Onepay_Admin. Defines all hooks for the admin area.
+	 * - Onepay_Public. Defines all hooks for the public side of the site.
+	 *
+	 * Create an instance of the loader which will be used to register the hooks
+	 * with WordPress.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function load_dependencies() {
 
         /**
          * The class responsible for loading external dependencies of the
@@ -221,6 +295,7 @@ class Onepay extends WC_Payment_Gateway {
 
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+        $this->loader->add_action('plugin_action_links_onepay',$plugin_admin, 'plugin_action_links');
     }
 
     /**
