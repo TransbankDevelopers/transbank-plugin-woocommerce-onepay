@@ -97,9 +97,8 @@ class Onepay_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/onepay-public.js', array( 'jquery' ), $this->version, false );
-
+        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/onepay-public.js', array( 'jquery' ), $this->version, false );
+        wp_add_inline_script( $this->plugin_name, 'window.transaction_url ="'.rest_url("onepay/v1/transaction").'";');
+        wp_add_inline_script( $this->plugin_name, 'window.commit_url ="'.rest_url("onepay/v1/commit").'";');
 	}
-
-
 }
