@@ -34,8 +34,10 @@ global $woocommerce, $post, $order;
                 </thead>
                 <tbody>
 
+
                 <?php
                 foreach ( WC()->cart->get_cart() as $cart_item ) {
+
                     $nombre = $cart_item['data']->get_title();
                     $cantidad = intval($cart_item['quantity']);
                     $precio = intval($cart_item['data']->get_price());
@@ -55,8 +57,13 @@ global $woocommerce, $post, $order;
             </table>
         </div>
         <div class="col-sm">
-            Aquí debería aparecer el QR:
-            <div id="qr"></div>
+            Total Compra
+
+            Total: <?php echo WC()->cart->get_cart_total(); ?>
+
+            <div onclick="transactionCreate()" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+                        <img src="images/icons/logo_onepay_white.png"> &nbsp; Pagar con OnePay
+                    </div>
         </div>
 
       </div>
@@ -74,83 +81,37 @@ global $woocommerce, $post, $order;
             var t = n.getElementsByTagName("script")[0];
             p = t.parentNode;
             p.insertBefore(s, t);
-        })(false, document, "https://cdn.rawgit.com/TransbankDevelopers/transbank-sdk-js-onepay/v1.1.0/lib/onepay.min.js", "script",
-            window, function () {
-                console.log("Onepay JS library successfully loaded.");
-
-                $.ajax({
-                    type: "GET",
-                    url: "transaction.php",
-                    async: true,
-                    success: function(data) {
-                        // convert json to object
-                        console.log(data)
-                        var transaction = JSON.parse(data);
-                        transaction["paymentStatusHandler"] = {
-                            ottAssigned: function () {
-                                // callback transacción asinada
-                                console.log("Transacción asignada.");
-
-                            },
-                            authorized: function (occ, externalUniqueNumber) {
-                                // callback transacción autorizada
-                                console.log("occ : " + occ);
-                                console.log("externalUniqueNumber : " + externalUniqueNumber);
-                                var params = {
-                                    occ: occ,
-                                    externalUniqueNumber: externalUniqueNumber
-                                };
-                                sendPostRedirect("commit.php", params);
-
-                            },
-                            canceled: function () {
-                                // callback rejected by user
-                                console.log("transacción cancelada por el usuario");
-                                onepay.drawQrImage("qr");
-                            },
-                            authorizationError: function () {
-                                // cacllback authorization error
-                                console.log("error de autorizacion");
-                            },
-                            unknown: function () {
-                                // callback to any unknown status recived
-                                console.log("estado desconocido");
-                            }
-                        };
-                        var onepay = new Onepay(transaction);
-                        onepay.drawQrImage("qr");
-                    },
-                    error: function (data) {
-                        console.log("something is going wrong");
-                    }
-                });
+        })(false, document, "https://cdn.rawgit.com/TransbankDevelopers/transbank-sdk-js-onepay/v1.2.0/lib/onepay.min.js",
+            "script",window, function () {
+                var options = {
+                    endpoint: './transaction.php',
+                    <?php
+                        $custom_logo_id = get_theme_mod( 'custom_logo' );
+                        $image = wp_get_attachment_image_src( $custom_logo_id , 'full' );
+                        if ($image != null) {
+                            echo 'commerceLogo: "'.$image[0].'",';
+                        }
+                    ?>
+                    callbackUrl: './commit.php'
+                    };
+                Onepay.checkout(options);
 
             });
 
-
-        function sendPostRedirect (destination, params) {
-            var form = document.createElement("form");
-            form.method = "POST";
-            form.action = destination;
-
-            Object.keys(params).forEach(function (key) {
-                var param = document.createElement("input");
-                param.type = "hidden";
-                param.name = key;
-                param.value = params[key];
-                form.appendChild(param);
-            });
-
-            var submit = document.createElement("input");
-            submit.type = "submit";
-            submit.name = "submitButton";
-            submit.style.display = "none";
-
-            form.appendChild(submit);
-            document.body.appendChild(form);
-            form.submit();
-        };
-
+            function transactionCreate() {
+                var options = {
+                    endpoint: './transaction.php',
+                    <?php
+                        $custom_logo_id = get_theme_mod( 'custom_logo' );
+                        $image = wp_get_attachment_image_src( $custom_logo_id , 'full' );
+                        if ($image != null) {
+                            echo 'commerceLogo: "'.$image[0].'",';
+                        }
+                    ?>
+                    callbackUrl: './commit.php'
+                    };
+                Onepay.checkout(options);
+            }
 
         </script>
 
