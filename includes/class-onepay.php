@@ -3,8 +3,6 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-define("MYCONST", "CONST");
-
 use Transbank\Onepay\OnepayBase;
 
 /**
@@ -102,11 +100,11 @@ class Onepay extends WC_Payment_Gateway {
 
         $this->id                 = 'onepay';
         $this->title              = __( 'Onepay', 'onepay' );
-        $this->description        = __( 'This is the payment gateway description', 'onepay' );
+        $this->description        = __( 'Paga con tus tarjetas de crédito usando Onepay', 'onepay' );
 		$this->icon               = apply_filters('woocommerce_Onepay_icon', plugin_dir_url( dirname( __FILE__ ) ) . 'public/images/logo_onepay.png');
 		$this->has_fields         = true;
 		$this->method_title       = __( 'Onepay', 'onepay' );
-		$this->method_description = __( 'This is the payment gateway description', 'onepay' );
+		$this->method_description = __( 'Paga con tus tarjetas de crédito usando Onepay', 'onepay' );
 		$this->supports = array(
 			'products'
 		  );
@@ -125,6 +123,8 @@ class Onepay extends WC_Payment_Gateway {
 
 		 add_action('woocommerce_api_'.strtolower(get_class($this)), array($this, 'callback_handler'));
 	//	 add_action( 'woocommerce_checkout_process', array( $this,'checkout_field_process'));
+
+
          self::$instance = $this;
 	}
 
@@ -221,11 +221,10 @@ class Onepay extends WC_Payment_Gateway {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-        $this->loader->add_action('plugin_action_links_onepay',$plugin_admin, 'plugin_action_links');
 	}
 
 	/**
-	 * Register all of the hooks related to the public-facing functionality
+	 * Register all of the hooks related to the publsic-facing functionality
 	 * of the plugin.
 	 *
 	 * @since    1.0.0
@@ -332,23 +331,25 @@ class Onepay extends WC_Payment_Gateway {
         );
 	}
 
+
+    public function plugin_action_links( $links, $file) {
+        if ($file == 'onepay/onepay.php') {
+            $plugin_links = array(
+                '<a href="admin.php?page=wc-settings&tab=checkout&section=onepay">' . esc_html__( 'Settings', 'woocommerce-gateway-onepay' ) . '</a>'
+            );
+
+
+            return array_merge( $plugin_links, $links );
+        }
+        return $links;
+    }
     /**
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *
 	 * @since    1.0.0
 	 */
-
-    public function plugin_action_links( $links ) {
-        $plugin_links = array(
-            '<a href="admin.php?page=wc-settings&tab=checkout&section=onepay">' . esc_html__( 'Settings', 'woocommerce-gateway-onepay' ) . '</a>'
-        );
-        return array_merge( $plugin_links, $links );
-    }
-
 	public function run() {
-
-        add_filter( 'plugin_action_links', array( $this, 'plugin_action_links' ) );
-
+        add_filter( 'plugin_action_links', array($this, 'plugin_action_links'), 10, 2 );
 		$this->loader->run();
 	}
 
