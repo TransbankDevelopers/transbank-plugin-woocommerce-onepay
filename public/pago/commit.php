@@ -131,13 +131,6 @@ require(dirname(__FILE__, 6) .'/wp-blog-header.php');
 
                 <div> <?php echo gmdate("d-m-Y", $transactionCommitResponse->getIssuedAt()); ?> </div>
             </div>
-            <div>
-                <div class="transaction-commit-info-title">Anulación</div>
-                <div>
-                    <a href=<?php echo plugin_dir_url( dirname( __FILE__ ) ) . 'pago/refund.php' ?>?amount=<?php echo urlencode($transactionCommitResponse->getAmount())?>&occ=<?php echo urlencode($transactionCommitResponse->getOcc()) ?>&externalUniqueNumber=<?php echo urlencode($externalUniqueNumber)?>&authorizationCode=<?php echo urlencode($transactionCommitResponse->getAuthorizationCode())?>
-                    >Anular esta compra</a>
-                </div>
-            </div>
         </div>
         <div class="return-home-btn-container">
             <div class='return-home-btn'>

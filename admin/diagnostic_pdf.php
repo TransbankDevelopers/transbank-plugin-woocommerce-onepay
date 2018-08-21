@@ -6,8 +6,6 @@ require(dirname(__FILE__, 5) .'/wp-load.php');
 if (!defined('ABSPATH')) {
     exit;
 }
-
-//require(dirname(__FILE__, 2) . "/includes/class-onepay.php");
 class DiagnosticPDF extends FPDF {
     private $info;
     private $op;

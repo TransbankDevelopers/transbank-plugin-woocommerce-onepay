@@ -271,28 +271,40 @@ class Onepay extends WC_Payment_Gateway {
                       'Integration' => __( 'Integración', 'onepay' ),
                       'Production' => __( 'Producción', 'onepay' )
      				)
-				),
-                'genpdf' =>
-                    array(
-                    'type' => 'button',
-                    'title' => __('Generar PDF', 'onepay'),
-                    'label' => __('Generar PDF de Diagnostico', 'onepay'),
-                    'description' => __( 'Genera un PDF con información sobre el entorno del plugin', 'onepay' ),
-                    'desc_tip' => true,
-                    'default' => __( 'Generar PDF', 'onepay' ),
-                    'placeholder' => __( 'Generar PDF', 'onepay' ),
-                    'value' =>__( 'Generar PDF', 'onepay' ),
-                    'custom_attributes' => array(
-                        'onclick' => "location.href='". plugin_dir_url( dirname( __FILE__ ) ) . 'admin/diagnostic_pdf.php\'',
-                        'value' => __( 'Generar PDF', 'onepay' )
-                    ),
-
-                ),
-
+				)
 	        );
 	    }
 
-	function payment_fields(){
+
+    function admin_options() {
+
+
+        parent::admin_options();
+        ?>
+        <style type="text/css">
+            .generate-pdf-button {
+                height: 2em;
+                font-weight:  bold;
+                font-size: 1rem;
+            }
+            .generate-pdf-link {
+                text-decoration: none;
+            }
+        </style>
+        <div>
+            <button class="generate-pdf-button">
+                <a class="generate-pdf-link"
+                   href=<?php echo plugin_dir_url( dirname( __FILE__ ) ) . 'admin/diagnostic_pdf.php' ?>
+                   target="_blank"
+                   rel="noopener"
+                   >Generar PDF de Diagnóstico</a>
+            </button>
+        </div>
+
+        <?php
+    }
+
+    function payment_fields(){
         echo wpautop( wptexturize( "¡Paga con Onepay! En la siguiente pantalla podrás escanear el código QR, o ingresar el código de compra." ) );
 	}
 
