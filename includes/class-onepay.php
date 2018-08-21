@@ -123,6 +123,7 @@ class Onepay extends WC_Payment_Gateway {
         // Actions
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         add_action( 'woocommerce_api_'.strtolower(get_class($this)), array($this, 'callback_handler'));
+        add_filter( 'woocommerce_thankyou_order_received_text', array($this, 'wpb_thankyou'), 10, 2 );
 
         add_action( 'rest_api_init', function () {
             register_rest_route( 'onepay/v1', '/transaction', array(
@@ -200,6 +201,66 @@ class Onepay extends WC_Payment_Gateway {
         $response['amount'] = $carro->getTotal();
 
         return $response;
+    }
+
+    function wpb_thankyou( $thankyoutext, $order ) {
+        if ($order->get_payment_method() == "onepay"){
+            $thankyou = __( 'Thank you. Your order has been received.', 'woocommerce' ) .
+            "<h2> Detalles de la transacción en Onepay</h2>".
+
+            "<table>
+            <tr>
+                <td>OCC:</td>
+                <td>".get_post_meta($order->get_id(), 'occ','')[0]." </td>
+            </tr>
+            <tr>
+                <td>Número de carro:</td>
+                <td>".get_post_meta($order->get_id(), 'externalUniqueNumber','')[0]."</td>
+            </tr>
+            <tr>
+                <td>Código de autorización:</td>
+                <td>".get_post_meta($order->get_id(), 'authorizationCode','')[0]."</td>
+            </tr>
+            <tr>
+                <td>Orden de compra:</td>
+                <td>".get_post_meta($order->get_id(), 'buyOrder','')[0]."</td>
+            </tr>
+            <tr>
+                <td>Estado:</td>
+                <td>".get_post_meta($order->get_id(), 'description','')[0]."</td>
+            </tr>
+            <tr>
+                <td>Monto de compra:</td>
+                <td>".get_post_meta($order->get_id(), 'amount','')[0]."</td>
+            </tr>
+            ".(get_post_meta($order->get_id(), 'installmentsNumber','')[0] == 1 ?
+            "
+            <tr>
+            <td>Numero de cuotas:</td>
+            <td>Sin Cuotas</td>
+            </tr>
+            " :
+            "
+            <tr>
+            <td>Numero de cuotas:</td>
+                <td>".get_post_meta($order->get_id(), 'installmentsNumber','')[0]."</td>
+            </tr>
+            <tr>
+                <td>Monto cuota:</td>
+                <td>".get_post_meta($order->get_id(), 'installmentsAmount','')[0]."</td>
+            </tr>
+            "
+            )."
+            <tr>
+                <td>Fecha:</td>
+                <td>".get_post_meta($order->get_id(), 'issuedAt','')[0]."</td>
+            </tr>
+        </table>";
+        } else {
+            $thankyou = $thankyoutext;
+        }
+
+        return $thankyou;
     }
 
 	function callback_handler() {
@@ -387,20 +448,13 @@ class Onepay extends WC_Payment_Gateway {
         return $is_valid;
     }
 
-    public function process_payment( $order_id ) {
-        global $woocommerce, $post;
-
-        $shared_secret = $this->get_option( 'shared_secret' );
-        $api_key = $this->get_option( 'apikey' );
-
-        OnepayBase::setSharedSecret($shared_secret);
-        OnepayBase::setApiKey($api_key);
-
+	public function process_payment( $order_id ) {
+        OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
+        OnepayBase::setApiKey($this->get_option( 'apikey' ));
 
         $order = new WC_Order( $order_id );
 
         WC()->session->set('order_id', $order_id);
-        // TODO missing correct URL redirection
         return array(
             'result'    => 'success',
             'redirect'  => plugin_dir_url( dirname( __FILE__ ) ) . 'public/pago/pagar.php'
