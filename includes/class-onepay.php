@@ -100,23 +100,23 @@ class Onepay extends WC_Payment_Gateway {
 
         $this->id                 = 'onepay';
         $this->title              = __( 'Onepay', 'onepay' );
-        $this->description        = __( 'Paga con tus tarjetas de crédito usando Onepay', 'onepay' );
-        $this->icon               = apply_filters('woocommerce_Onepay_icon', plugin_dir_url( dirname( __FILE__ ) ) . 'public/images/logo_onepay.png');
-        $this->has_fields         = true;
-        $this->method_title       = __( 'Onepay', 'onepay' );
-        $this->method_description = __( 'Paga con tus tarjetas de crédito usando Onepay', 'onepay' );
-        $this->supports = array(
-            'products'
-          );
+        $this->description        = __( 'This is the payment gateway description', 'onepay' );
+		$this->icon               = apply_filters('woocommerce_Onepay_icon', plugin_dir_url( dirname( __FILE__ ) ) . 'public/images/logo_onepay.png');
+		$this->has_fields         = false;
+		$this->method_title       = __( 'Onepay', 'onepay' );
+		$this->method_description = __( 'This is the payment gateway description', 'onepay' );
+		$this->supports = array(
+			'products'
+		  );
 
 
-         // Define user set variables
-         $this->apikey         = $this->get_option( 'apikey' );
-         $this->shared_secret   = $this->get_option( 'shared_secret' );
+		 // Define user set variables
+		 $this->apikey         = $this->get_option( 'apikey' );
+		 $this->shared_secret   = $this->get_option( 'shared_secret' );
 
-         // Actions
-         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-         add_action( 'woocommerce_thankyou_Onepay', array( $this, 'thankyou_page' ) );
+		 // Actions
+		 add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+		 add_action( 'woocommerce_thankyou_Onepay', array( $this, 'thankyou_page' ) );
         // Load the settings.
         $this->init_form_fields();
         $this->init_settings();
