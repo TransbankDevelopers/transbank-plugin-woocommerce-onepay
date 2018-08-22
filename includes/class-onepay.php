@@ -100,10 +100,6 @@ class Onepay extends WC_Payment_Gateway {
 		$this->define_admin_hooks();
         $this->define_public_hooks();
 
-        // Load the settings.
-        $this->init_form_fields();
-        $this->init_settings();
-
         $this->id                 = 'onepay';
         $this->title              = __( 'Onepay', 'onepay' );
         $this->description        = __( 'This is the payment gateway description', 'onepay' );
@@ -115,13 +111,7 @@ class Onepay extends WC_Payment_Gateway {
 			'products'
 		  );
 
-
-        // Define user set variables
-        $this->apikey         = $this->get_option( 'apikey' );
-        $this->shared_secret   = $this->get_option( 'shared_secret' );
-
         // Actions
-        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         add_action( 'woocommerce_api_'.strtolower(get_class($this)), array($this, 'callback_handler'));
         add_filter( 'woocommerce_thankyou_order_received_text', array($this, 'wpb_thankyou'), 10, 2 );
 
@@ -137,10 +127,22 @@ class Onepay extends WC_Payment_Gateway {
             ));
         });
 
+        // Define user set variables
+        $this->apikey         = $this->get_option( 'apikey' );
+        $this->shared_secret   = $this->get_option( 'shared_secret' );
+
+        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+
+        // Load the settings.
+        $this->init_form_fields();
+        $this->init_settings();
+
         self::$instance = $this;
     }
 
     function commit_transaction($data) {
+        OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
+        OnepayBase::setApiKey($this->get_option( 'apikey' ));
 
         $order_id = WC()->session->get('order_id');
         $externalUniqueNumber = $data['externalUniqueNumber'];
@@ -173,6 +175,9 @@ class Onepay extends WC_Payment_Gateway {
     }
 
     function create_transaction($data) {
+        OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
+        OnepayBase::setApiKey($this->get_option( 'apikey' ));
+
         $carro = new ShoppingCart();
 
         foreach ( WC()->cart->get_cart() as $cart_item ) {
