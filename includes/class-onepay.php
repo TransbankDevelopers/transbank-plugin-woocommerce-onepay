@@ -488,7 +488,7 @@ class Onepay extends WC_Payment_Gateway {
         WC()->session->set('order_id', $order_id);
         return array(
             'result'    => 'success',
-            'redirect'  => plugin_dir_url( dirname( __FILE__ ) ) . 'public/pago/pagar.php'
+            'redirect'  => WC()->cart->get_checkout_url()
         );
     }
 
