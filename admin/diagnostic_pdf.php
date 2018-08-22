@@ -135,19 +135,20 @@ class DiagnosticPDF extends FPDF {
         $this->Ln(8);
         $this->Cell(10, 8, 'Logs');
         $this->Ln(15);
-        $logfile = fopen(ABSPATH . 'wp-content/debug.log', "r");
-        if ($logfile) {
-            while (($line = fgets($logfile)) !== false) {
-                // process the line read.
-                $this->Write(10,  $line);
-                $this->Ln(4);
-            }
 
-            fclose($logfile);
-        } else {
-            // error opening the file.
-            $this->Cell(10, 8, 'debug.log could not be found.');
+        try {
+            $logfile = fopen(ABSPATH . 'wp-content/debug.log', "r");
         }
+        catch(Exception $exception) {
+            $this->Write(10,  'WP_DEBUG no está activado o wp-content/debug.log no es accesible.');
+            $this->Ln(4);
+        }
+        while (($line = fgets($logfile)) !== false) {
+            // process the line read.
+            $this->Write(10,  $line);
+            $this->Ln(4);
+        }
+        fclose($logfile);
     }
     // Page footer
     function Footer()
