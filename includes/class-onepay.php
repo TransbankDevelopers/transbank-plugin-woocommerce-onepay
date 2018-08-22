@@ -154,9 +154,12 @@ class Onepay extends WC_Payment_Gateway {
         $transactionCommitResponse = Transaction::commit($data['occ'], $externalUniqueNumber);
         $order = new WC_Order($order_id);
 
-        if($transactionCommitResponse->getResponseCode() == 'OK') {
-            $order->update_status('completed');
+        if($transactionCommitResponse->getResponseCode() == 'OK' && (intval($transactionCommitResponse->getAmount()) == intval(WC()->cart->get_total('commit')))) {
+            $order->update_status('processing');
             $order->payment_complete();
+            $order->reduce_order_stock();
+            WC()->cart->empty_cart();
+
             update_post_meta($order_id, 'occ', $transactionCommitResponse->getOcc());
             update_post_meta($order_id, 'externalUniqueNumber', $externalUniqueNumber);
             update_post_meta($order_id, 'buyOrder', $transactionCommitResponse->getBuyOrder());
@@ -170,6 +173,11 @@ class Onepay extends WC_Payment_Gateway {
 
             } else {
                 $order->update_status('cancelled');
+                wc_add_notice( __('Payment error:', 'woothemes') . 'Ha ocurrido un error con el pago, reintente nuevamente', 'error' );
+
+                if ( wp_redirect($order->get_cancel_order_url_raw()) ) {
+                    exit;
+                }
             }
 
         WC()->session->set('order_id', null);
