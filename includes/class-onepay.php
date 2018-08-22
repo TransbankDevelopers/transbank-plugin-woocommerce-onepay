@@ -287,6 +287,7 @@ class Onepay extends WC_Payment_Gateway {
             }
             .generate-pdf-link {
                 text-decoration: none;
+                color: black;
             }
         </style>
         <div>
