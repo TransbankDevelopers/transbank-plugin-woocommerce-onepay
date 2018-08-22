@@ -15,7 +15,7 @@
         var t = n.getElementsByTagName("script")[0];
         p = t.parentNode;
         p.insertBefore(s, t);
-    })(false, document, "https://cdn.rawgit.com/TransbankDevelopers/transbank-sdk-js-onepay/v1.3.0/lib/onepay.min.js",
+    })(false, document, "https://cdn.rawgit.com/TransbankDevelopers/transbank-sdk-js-onepay/v1.3.2/lib/onepay.min.js",
         "script",window, function () {
             console.log("Onepay JS library successfully loaded.");
             var checkout_form = jQuery( 'form.checkout' );
@@ -38,7 +38,7 @@
                                     endpoint: transaction_url,
                                     callbackUrl: commit_url
                                     };
-                                Onepay.checkout(options,[]);
+                                Onepay.checkout(options);
                             } else if ( 'failure' === result.result ) {
                                 throw 'Result failure';
                             } else {
