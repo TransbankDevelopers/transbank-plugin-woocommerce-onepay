@@ -299,7 +299,16 @@ class Onepay extends WC_Payment_Gateway {
 
         return $thankyou;
     }
-
+    public function is_valid_for_use()
+    {
+        if (!in_array(get_woocommerce_currency(), apply_filters('woocommerce_' . $this->id . '_supported_currencies', array('CLP')))) {
+            return false;
+        }
+        if ($this->get_option( 'apikey' ) == null || $this->get_option( 'shared_secret' ) == null) {
+            return false;
+        }
+        return true;
+    }
 	/**
 	 * Load the required dependencies for this plugin.
 	 *
