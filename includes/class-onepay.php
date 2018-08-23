@@ -84,6 +84,9 @@ class Onepay extends WC_Payment_Gateway {
      */
 
     public static $logger;
+    public static function logfileLocation() {
+        return ABSPATH . '/log/onepay-log.log';
+    }
 
     public static $instance;
 
@@ -566,7 +569,7 @@ class Onepay extends WC_Payment_Gateway {
                         )
                     ),
                     'params' => array(
-                        'file' => ABSPATH. '/log/onepay-log.log',
+                        'file' => self::logfileLocation(),
                         'maxFileSize' => '1MB',
                         'maxBackupIndex' => 2,
                     )

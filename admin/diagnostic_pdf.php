@@ -135,12 +135,12 @@ class DiagnosticPDF extends FPDF {
         $this->Ln(8);
         $this->Cell(10, 8, 'Logs');
         $this->Ln(15);
-
+        $logfileLocation = Onepay::logfileLocation();
         try {
-            $logfile = fopen(ABSPATH . 'wp-content/debug.log', "r");
+            $logfile = fopen($logfileLocation, "r");
         }
         catch(Exception $exception) {
-            $this->Write(10,  'WP_DEBUG no está activado o wp-content/debug.log no es accesible.');
+            $this->Write(10,  'No se pudo acceder a archivo de logs.');
             $this->Ln(4);
         }
         while (($line = fgets($logfile)) !== false) {
