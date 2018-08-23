@@ -95,7 +95,6 @@ class Onepay extends WC_Payment_Gateway {
 
 
 
-
     public function __construct() {
         if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
             $this->version = PLUGIN_NAME_VERSION;
@@ -157,7 +156,6 @@ class Onepay extends WC_Payment_Gateway {
     }
 
     function commit_transaction($data) {
-
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
 
@@ -166,8 +164,8 @@ class Onepay extends WC_Payment_Gateway {
         $transactionCommitResponse = Transaction::commit($data['occ'], $externalUniqueNumber);
         $order = new WC_Order($order_id);
 
-        if($transactionCommitResponse->getResponseCode() == 'OK' && (intval($transactionCommitResponse->getAmount()) == intval(WC()->cart->get_total('commit')))) {
-            $order->update_status('processing');
+        if($transactionCommitResponse->getResponseCode() == 'OK') {
+            $order->update_status('completed');
             $order->payment_complete();
             $order->reduce_order_stock();
             WC()->cart->empty_cart();
@@ -294,35 +292,10 @@ class Onepay extends WC_Payment_Gateway {
         } else {
             $thankyou = $thankyoutext;
         }
+
         return $thankyou;
     }
 
-<<<<<<< HEAD
-	function callback_handler() {
-		//Handle the thing here!
-		global $woocommerce;
-		@ob_clean();
-
-		wp_redirect($order->get_shipping_first_name());
-		error_log('handle');
-
-	  }
-
-    public function is_valid_for_use()
-    {
-        if (!in_array(get_woocommerce_currency(), apply_filters('woocommerce_' . $this->id . '_supported_currencies', array('CLP')))) {
-            return false;
-        }
-
-        if ($this->get_option( 'apikey' ) == null || $this->get_option( 'shared_secret' ) == null) {
-            return false;
-        }
-
-        return true;
-    }
-
-=======
->>>>>>> Add rolling log files
 	/**
 	 * Load the required dependencies for this plugin.
 	 *
