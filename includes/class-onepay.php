@@ -8,6 +8,8 @@ use Transbank\Onepay\ShoppingCart;
 use Transbank\Onepay\Item;
 use Transbank\Onepay\Transaction;
 use \Transbank\Onepay\Exceptions\TransactionCreateException;
+use \Transbank\Onepay\Exceptions\TransbankException;
+
 require(plugin_dir_path(__FILE__) . '../vendor/autoload.php');
 
 /**
@@ -161,10 +163,10 @@ class Onepay extends WC_Payment_Gateway {
 
         $order_id = WC()->session->get('order_id');
         $externalUniqueNumber = $data['externalUniqueNumber'];
-        $transactionCommitResponse = Transaction::commit($data['occ'], $externalUniqueNumber);
-        $order = new WC_Order($order_id);
 
-        if($transactionCommitResponse->getResponseCode() == 'OK') {
+        try {
+            $transactionCommitResponse = Transaction::commit($data['occ'], $externalUniqueNumber);
+            $order = new WC_Order($order_id);
             $order->update_status('completed');
             $order->payment_complete();
             $order->reduce_order_stock();
@@ -180,16 +182,16 @@ class Onepay extends WC_Payment_Gateway {
             update_post_meta($order_id, 'issuedAt', $transactionCommitResponse->getIssuedAt());
             update_post_meta($order_id, 'authorizationCode', $transactionCommitResponse->getAuthorizationCode());
             update_post_meta($order_id, 'signature', $transactionCommitResponse->getSignature());
+        }
+        catch (TransbankException $transbank_exception) {
+            self::$logger->error('Confirmación de transacción fallida: ' . $transbank_exception->getMessage());
+            $order->update_status('cancelled');
+            wc_add_notice( __('Payment error:', 'woothemes') . 'Ha ocurrido un error con el pago, reintente nuevamente', 'error' );
 
-            } else {
-                $order->update_status('cancelled');
-                wc_add_notice( __('Payment error:', 'woothemes') . 'Ha ocurrido un error con el pago, reintente nuevamente', 'error' );
-
-                if ( wp_redirect($order->get_cancel_order_url_raw()) ) {
-                    exit;
-                }
+            if ( wp_redirect($order->get_cancel_order_url_raw()) ) {
+                exit;
             }
-
+        }
         WC()->session->set('order_id', null);
 
         if ( wp_redirect($order->get_checkout_order_received_url()) ) {
@@ -200,7 +202,9 @@ class Onepay extends WC_Payment_Gateway {
     function create_transaction($data) {
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
+
         self::$logger->info('Creating a transaction');
+
         $carro = new ShoppingCart();
 
         foreach ( WC()->cart->get_cart() as $cart_item ) {
@@ -229,9 +233,9 @@ class Onepay extends WC_Payment_Gateway {
             $response['amount'] = $carro->getTotal();
             return $response;
         }
-        catch (TransactionCreateException $transaction_create_exception) {
-            $msg =  $transaction_create_exception->getMessage();
-            self::$logger->error("Transacción fallida: " . $msg);
+        catch (TransbankException $transbank_exception) {
+            $msg =  $transbank_exception->getMessage();
+            self::$logger->error("Creación de Transacción fallida: " . $msg);
             throw new TransactionCreateException($msg);
         }
     }
