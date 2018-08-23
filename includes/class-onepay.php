@@ -7,6 +7,9 @@ use Transbank\Onepay\OnepayBase;
 use Transbank\Onepay\ShoppingCart;
 use Transbank\Onepay\Item;
 use Transbank\Onepay\Transaction;
+use \Transbank\Onepay\Exceptions\TransactionCreateException;
+require(plugin_dir_path(__FILE__) . '../vendor/autoload.php');
+
 /**
  * The file that defines the core plugin class
  *
@@ -34,6 +37,10 @@ use Transbank\Onepay\Transaction;
  * @subpackage Onepay/includes
  * @author     Onepay <transbankdevelopers@continuum.cl>
  */
+
+
+
+
 class Onepay extends WC_Payment_Gateway {
 
     /**
@@ -74,6 +81,8 @@ class Onepay extends WC_Payment_Gateway {
      * @since    1.0.0
      */
 
+    public static $logger;
+
     public static $instance;
 
     public static function getInstance() {
@@ -86,13 +95,16 @@ class Onepay extends WC_Payment_Gateway {
 
 
 
+
     public function __construct() {
         if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
             $this->version = PLUGIN_NAME_VERSION;
         } else {
             $this->version = '1.0.0';
         }
-
+        // Tell log4php to use our configuration file.
+        Logger::configure($this->log4phpconfig());
+        self::$logger = Logger::getLogger('default');
         $this->plugin_name = 'onepay';
 
 		$this->load_dependencies();
@@ -177,7 +189,7 @@ class Onepay extends WC_Payment_Gateway {
     function create_transaction($data) {
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
-
+        self::$logger->info('Creating a transaction');
         $carro = new ShoppingCart();
 
         foreach ( WC()->cart->get_cart() as $cart_item ) {
@@ -194,18 +206,23 @@ class Onepay extends WC_Payment_Gateway {
             $carro->add($item);
         }
 
-        $transaction = Transaction::create($carro);
-        $response = [];
-
-        $response['occ'] = $transaction->getOcc();
-        $response['ott'] = $transaction->getOtt();
-        $response['externalUniqueNumber'] = $transaction->getExternalUniqueNumber();
-        $response['qrCodeAsBase64'] = $transaction->getQrCodeAsBase64();
-        $response['issuedAt'] = $transaction->getIssuedAt();
-        $response['signature'] = $transaction->getSignature();
-        $response['amount'] = $carro->getTotal();
-
-        return $response;
+        try {
+            $transaction = Transaction::create($carro);
+            $response = [];
+            $response['occ'] = $transaction->getOcc();
+            $response['ott'] = $transaction->getOtt();
+            $response['externalUniqueNumber'] = $transaction->getExternalUniqueNumber();
+            $response['qrCodeAsBase64'] = $transaction->getQrCodeAsBase64();
+            $response['issuedAt'] = $transaction->getIssuedAt();
+            $response['signature'] = $transaction->getSignature();
+            $response['amount'] = $carro->getTotal();
+            return $response;
+        }
+        catch (TransactionCreateException $transaction_create_exception) {
+            $msg =  $transaction_create_exception->getMessage();
+            self::$logger->error("Transacción fallida: " . $msg);
+            throw new TransactionCreateException($msg);
+        }
     }
 
     function wpb_thankyou( $thankyoutext, $order ) {
@@ -264,19 +281,8 @@ class Onepay extends WC_Payment_Gateway {
         } else {
             $thankyou = $thankyoutext;
         }
-
         return $thankyou;
     }
-
-	function callback_handler() {
-		//Handle the thing here!
-		global $woocommerce;
-		@ob_clean();
-
-		wp_redirect($order->get_shipping_first_name());
-		error_log('handle');
-
-	  }
 
 	/**
 	 * Load the required dependencies for this plugin.
@@ -519,4 +525,29 @@ class Onepay extends WC_Payment_Gateway {
         return $this->version;
     }
 
+    private function log4phpconfig() {
+        return array(
+            'rootLogger' => array(
+                'level' => 'warn',
+                'appenders' => array('default'),
+            ),
+            'appenders' => array(
+                'default' => array(
+                    'class' => 'LoggerAppenderRollingFile',
+                    'layout' => array(
+                        'class' => 'LoggerLayoutPattern',
+                        'params' => array(
+                            'conversionPattern' => '[%date{Y-m-d H:i:s T}] [ %-5level] %msg%n',
+                        )
+                    ),
+                    'params' => array(
+                        'file' => ABSPATH. '/log/onepay-log.log',
+                        'maxFileSize' => '1MB',
+                        'maxBackupIndex' => 2,
+                    )
+                )
+            )
+        );
+
+    }
 }

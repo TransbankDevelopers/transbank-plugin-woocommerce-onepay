@@ -14,16 +14,21 @@ require(dirname(__FILE__, 6) .'/wp-blog-header.php');
 
     $order_id = WC()->session->get('order_id');
 
-    OnepayBase::setSharedSecret("P4DCPS55QB2QLT56SQH6#W#LV76IAPYX");
-    OnepayBase::setApiKey("mUc0GxYGor6X8u-_oB3e-HWJulRG01WoC96-_tUA3Bg");
+    OnepayBase::setSharedSecret(Onepay::getInstance()->get_option('shared_secret'));
+    OnepayBase::setApiKey(Onepay::getInstance()->get_option('apikey'));
     $externalUniqueNumber = $_POST['externalUniqueNumber'];
+
+    Onepay::$logger->info('[' . date("d-M-Y H:m:s T") . ']'  . ' Committing Onepay payment');
     $transactionCommitResponse = Transaction::commit($_POST['occ'], $externalUniqueNumber);
     $order = new WC_Order($order_id);
+
     if($transactionCommitResponse->getResponseCode() == 'OK') {
         $order->update_status('completed');
+        Onepay::$logger->info('[' . date("d-M-Y H:m:s T") . ']'  . ' Successfully committed Onepay payment');
     }
     else {
         $order->update_status('cancelled');
+        Onepay::$logger->error('[' . date("d-M-Y H:m:s T") . ']'  . ' Failed committing Onepay payment');
     }
 
 ?>
