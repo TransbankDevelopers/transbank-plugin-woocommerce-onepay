@@ -40,9 +40,6 @@ require(plugin_dir_path(__FILE__) . '../vendor/autoload.php');
  * @author     Onepay <transbankdevelopers@continuum.cl>
  */
 
-
-
-
 class Onepay extends WC_Payment_Gateway {
 
     /**
@@ -97,8 +94,6 @@ class Onepay extends WC_Payment_Gateway {
         }
         return self::$instance;
     }
-
-
 
     public function __construct() {
         if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
@@ -160,6 +155,11 @@ class Onepay extends WC_Payment_Gateway {
         }
     }
 
+    /**
+     * Trigger the payment at the credit card.
+     *
+     * @since    1.0.0
+     */
     function commit_transaction($data) {
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
@@ -202,6 +202,11 @@ class Onepay extends WC_Payment_Gateway {
         }
     }
 
+    /**
+     * Create transaction with payment gateway.
+     *
+     * @since    1.0.0
+     */
     function create_transaction($data) {
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
@@ -243,6 +248,11 @@ class Onepay extends WC_Payment_Gateway {
         }
     }
 
+    /**
+     * Adds Payment fields at "Thank you" page.
+     *
+     * @since    1.0.0
+     */
     function wpb_thankyou( $thankyoutext, $order ) {
         if ($order->get_payment_method() == "onepay"){
             $thankyou = __( 'Thank you. Your order has been received.', 'woocommerce' ) .
@@ -302,6 +312,12 @@ class Onepay extends WC_Payment_Gateway {
 
         return $thankyou;
     }
+
+    /**
+     * Deactivate plugin if currency isn't CLP and private keys are not stored.
+     *
+     * @since    1.0.0
+     */
     public function is_valid_for_use()
     {
         if (!in_array(get_woocommerce_currency(), apply_filters('woocommerce_' . $this->id . '_supported_currencies', array('CLP')))) {
@@ -415,43 +431,45 @@ class Onepay extends WC_Payment_Gateway {
     }
 
     /**
-         * Create form fields for the payment gateway
-         *
-         * @return void
-         */
-        public function init_form_fields() {
-            $this->form_fields = array(
-                'enabled' => array(
-                    'title' => __( 'Activa/Desactiva', 'onepay' ),
-                    'type' => 'checkbox',
-                    'label' => __( 'Activar Onepay', 'onepay' ),
-                    'default' => 'no'
-                ),
-                'apikey' => array(
-                    'title' => __( 'APIKey', 'onepay' ),
-                    'type' => 'text'
-                ),
-                'shared_secret' => array(
-                    'title' => __( 'Shared Secret', 'onepay' ),
-                    'type' => 'text'
-                ),
-                'endpoint' => array(
-                    'title' => __('Endpoint', 'onepay'),
-                    'type' => 'select',
-                    'default' => 0,
-                    'options' => array(
-                      'Test' => __( 'Test', 'onepay' ),
-                      'Integration' => __( 'Integración', 'onepay' ),
-                      'Production' => __( 'Producción', 'onepay' )
-                    )
+     * Create form fields for the payment gateway
+     *
+     * @return void
+     */
+    public function init_form_fields() {
+        $this->form_fields = array(
+            'enabled' => array(
+                'title' => __( 'Activa/Desactiva', 'onepay' ),
+                'type' => 'checkbox',
+                'label' => __( 'Activar Onepay', 'onepay' ),
+                'default' => 'no'
+            ),
+            'apikey' => array(
+                'title' => __( 'APIKey', 'onepay' ),
+                'type' => 'text'
+            ),
+            'shared_secret' => array(
+                'title' => __( 'Shared Secret', 'onepay' ),
+                'type' => 'text'
+            ),
+            'endpoint' => array(
+                'title' => __('Endpoint', 'onepay'),
+                'type' => 'select',
+                'default' => 0,
+                'options' => array(
+                    'Test' => __( 'Test', 'onepay' ),
+                    'Integration' => __( 'Integración', 'onepay' ),
+                    'Production' => __( 'Producción', 'onepay' )
                 )
-            );
-        }
+            )
+        );
+    }
 
-
+    /**
+     * Adds diagnostic button at plugin settings.
+     *
+     * @since    1.0.0
+     */
     function admin_options() {
-
-
         parent::admin_options();
         ?>
         <style type="text/css">
@@ -478,19 +496,31 @@ class Onepay extends WC_Payment_Gateway {
         <?php
     }
 
+    /**
+     * Show payment gateway description.
+     *
+     * @since    1.0.0
+     */
     function payment_fields(){
         echo wpautop( wptexturize( "¡Paga con Onepay! En la siguiente pantalla podrás escanear el código QR, o ingresar el código de compra." ) );
     }
 
+    /**
+     * Validate form fields.
+     *
+     * @since    1.0.0
+     */
     function validate_fields() {
         $is_valid = parent::validate_fields();
         return $is_valid;
     }
 
+    /**
+     * Pre-process payment according to Woocommerce API.
+     *
+     * @since    1.0.0
+     */
 	public function process_payment( $order_id ) {
-        OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
-        OnepayBase::setApiKey($this->get_option( 'apikey' ));
-
         $order = new WC_Order( $order_id );
 
         WC()->session->set('order_id', $order_id);
@@ -500,7 +530,11 @@ class Onepay extends WC_Payment_Gateway {
         );
     }
 
-
+    /**
+     * Show setting at plugin.
+     *
+     * @since    1.0.0
+     */
     public function plugin_action_links( $links, $file) {
         if ($file == 'onepay/onepay.php') {
             $plugin_links = array(
@@ -512,6 +546,7 @@ class Onepay extends WC_Payment_Gateway {
         }
         return $links;
     }
+
     /**
      * Run the loader to execute all of the hooks with WordPress.
      *
@@ -576,6 +611,5 @@ class Onepay extends WC_Payment_Gateway {
                 )
             )
         );
-
     }
 }

@@ -34,5 +34,4 @@ class Onepay_Activator {
 	public static function activate() {
 
 	}
-
 }

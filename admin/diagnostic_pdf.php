@@ -14,11 +14,11 @@ class DiagnosticPDF extends FPDF {
         $this->op = Onepay::getInstance();
         parent::__construct();
     }
-// Page header
+
+    // Page header
     function Header()
     {
         // Logo
-       # $this->Image('logo.png',10,6,30);s
         // Arial bold 15
         $this->SetFont('Arial','B',15);
         // Move to the right
@@ -53,7 +53,6 @@ class DiagnosticPDF extends FPDF {
         $this->Ln(8);
     }
 
-
     function addServerApi() {
         // Move to the right
         $this->Cell(10);
@@ -68,6 +67,7 @@ class DiagnosticPDF extends FPDF {
         // Line break
         $this->Ln(8);
     }
+
     function addWooCommerceInfo() {
         global $woocommerce;
 
@@ -129,7 +129,6 @@ class DiagnosticPDF extends FPDF {
         }
 
     }
-
 
     function addLogs() {
         $this->Ln(8);
@@ -211,13 +210,7 @@ class DiagnosticPDF extends FPDF {
     }
 }
 
-
-
-
 $pdf = new DiagnosticPDF();
-
-
-//print_r($pdf->phpinfo2array());
 
 $pdf->AliasNbPages();
 $pdf->AddPage();

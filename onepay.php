@@ -17,7 +17,7 @@
  * Plugin URI:        https://github.com/TransbankDevelopers/transbank-plugin-woocommerce-onepay
  * Description:       Pay with Onepay using your favorite Credit Card!
  * Version:           1.0.0
- * Author:            Onepay
+ * Author:            Transbank
  * Author URI:        https://github.com/TransbankDevelopers
  * License:           BSD-3-Clause
  * License URI:       https://opensource.org/licenses/BSD-3-Clause

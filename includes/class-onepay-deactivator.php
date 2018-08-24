@@ -34,5 +34,4 @@ class Onepay_Deactivator {
 	public static function deactivate() {
 
 	}
-
 }
