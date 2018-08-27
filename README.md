@@ -9,7 +9,7 @@ Este plugin de WooCommerce implementa el [SDK PHP de Onepay](https://github.com/
 ## Instalación
 El manual de instalación para el usuario final se encuentra disponible [acá](docs/INSTALLATION.md).
 
-## Requisitos 
+## Requisitos 
 * PHP 5.6 o superior
 * Wordpress
 * WooCommerce 3.2 o superior
