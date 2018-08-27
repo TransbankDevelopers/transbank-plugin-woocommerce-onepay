@@ -99,7 +99,7 @@ class Onepay extends WC_Payment_Gateway {
         if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
             $this->version = PLUGIN_NAME_VERSION;
         } else {
-            $this->version = '1.0.0';
+            $this->version = '1.0.2';
         }
         // Tell log4php to use our configuration file.
         Logger::configure($this->log4phpconfig());
@@ -113,11 +113,11 @@ class Onepay extends WC_Payment_Gateway {
 
         $this->id                 = 'onepay';
         $this->title              = __( 'Onepay', 'onepay' );
-        $this->description        = __( 'This is the payment gateway description', 'onepay' );
+        $this->description        = "¡Paga con Onepay! Podrás comprar con tus tarjetas de crédito escaneando el código QR, o ingresando el código de compra";
 		$this->icon               = apply_filters('woocommerce_Onepay_icon', plugin_dir_url( dirname( __FILE__ ) ) . 'public/images/logo_onepay.png');
 		$this->has_fields         = false;
 		$this->method_title       = __( 'Onepay', 'onepay' );
-		$this->method_description = __( 'This is the payment gateway description', 'onepay' );
+		$this->method_description = "¡Paga con Onepay! Podrás comprar con tus tarjetas de crédito escaneando el código QR, o ingresando el código de compra";
 		$this->supports = array(
 			'products'
 		  );
