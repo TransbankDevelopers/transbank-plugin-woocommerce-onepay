@@ -163,6 +163,7 @@ class Onepay extends WC_Payment_Gateway {
     function commit_transaction($data) {
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
+        OnepayBase::setCurrentIntegrationType($this->get_option( 'endpoint' ));
 
         $order_id = WC()->session->get('order_id');
         $externalUniqueNumber = $data['externalUniqueNumber'];
@@ -210,6 +211,7 @@ class Onepay extends WC_Payment_Gateway {
     function create_transaction($data) {
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
+        OnepayBase::setCurrentIntegrationType($this->get_option( 'endpoint' ));
 
         self::$logger->info('Creating a transaction');
 
@@ -436,6 +438,7 @@ class Onepay extends WC_Payment_Gateway {
      * @return void
      */
     public function init_form_fields() {
+
         $this->form_fields = array(
             'enabled' => array(
                 'title' => __( 'Activa/Desactiva', 'onepay' ),
@@ -451,16 +454,18 @@ class Onepay extends WC_Payment_Gateway {
                 'title' => __( 'Shared Secret', 'onepay' ),
                 'type' => 'text'
             ),
+
             'endpoint' => array(
                 'title' => __('Endpoint', 'onepay'),
                 'type' => 'select',
                 'default' => 0,
-                'options' => array(
-                    'Test' => __( 'Test', 'onepay' ),
-                    'Integration' => __( 'Integración', 'onepay' ),
-                    'Production' => __( 'Producción', 'onepay' )
-                )
+
+                'options' => array_reduce(array_keys(OnepayBase::integrationTypes()), function ($result, $item) {
+                    $result[$item] = ucfirst( strtolower($item));
+                    return $result;
+                }, array())
             )
+
         );
     }
 

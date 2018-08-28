@@ -45,7 +45,7 @@ Para acceder a la configuración, debes seguir los siguientes pasos:
 4. ¡Ya está! Estás en la pantalla de configuración del plugin, podrás ingresar la siguiente información:
   * **APIKey**: Es lo que te identifica como comercio.
   * **Shared Secret**: Llave secreta que te autoriza y valida a hacer transacciones.
-  * **Endpoint**: Ambiente hacia donde se realiza la transacción. Las opciones disponibles son "Test", "Integración" y "Producción".
+  * **Endpoint**: Ambiente hacia donde se realiza la transacción. Las opciones disponibles son "Test", "Live" y "Mock".
   
   Además, puedes generar un documento de diagnóstico en caso que Transbank te lo pida. Para ello, haz click en "Generar PDF de Diagnóstico", y automáticamente se descargará dicho documento.
 
