@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Onepay
  * Plugin URI:        https://github.com/TransbankDevelopers/transbank-plugin-woocommerce-onepay
- * Description:       Pay with Onepay using your favorite Credit Card!
+ * Description:       ¡Paga con Onepay! Podrás comprar con tus tarjetas de crédito escaneando el código QR, o ingresando el código de compra.
  * Version:           1.0.0
  * Author:            Transbank
  * Author URI:        https://github.com/TransbankDevelopers
