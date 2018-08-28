@@ -6,8 +6,13 @@ Plugin oficial de Woocommerce para Onepay
 
 Este plugin de WooCommerce implementa el [SDK PHP de Onepay](https://github.com/TransbankDevelopers/transbank-sdk-php) en modalidad Checkout. 
 
+## Demostración
+
+![Demo](docs/img/demo.gif)
+
 ## Instalación
-El manual de instalación para el usuario final se encuentra disponible [acá](docs/INSTALLATION.md).
+El manual de instalación para el usuario final se encuentra disponible [acá](docs/INSTALLATION.md), y además puedes descargarlo como PDF desde [acá](https://github.com/TransbankDevelopers/transbank-plugin-woocommerce-onepay/raw/master/docs/INSTALLATION.pdf
+)
 
 ## Requisitos 
 * PHP 5.6 o superior
