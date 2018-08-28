@@ -1,3 +1,4 @@
+composer install
 wp core install --url=localhost:8080 --title=Onepay --admin_user=onepay --admin_password=onepay --admin_email=transbankdevelopers@continuum.cl
 wp plugin install woocommerce
 wp plugin activate woocommerce
