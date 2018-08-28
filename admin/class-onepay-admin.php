@@ -1,7 +1,7 @@
 <?php
-/*if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
     exit;
-}*/
+}
 /**
  * The admin-specific functionality of the plugin.
  *
