@@ -459,11 +459,10 @@ class Onepay extends WC_Payment_Gateway {
                 'title' => __('Endpoint', 'onepay'),
                 'type' => 'select',
                 'default' => 0,
-
-                'options' => array_reduce(array_keys(OnepayBase::integrationTypes()), function ($result, $item) {
-                    $result[$item] = ucfirst( strtolower($item));
-                    return $result;
-                }, array())
+                'options' => array(
+                    'TEST' => __( 'Integración', 'onepay' ),
+                    'LIVE' => __( 'Producción', 'onepay' )
+                )
             )
 
         );
