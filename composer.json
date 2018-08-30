@@ -1,7 +1,7 @@
 {
 
     "require": {
-        "transbank/transbank-sdk": "1.2.1",
+        "transbank/transbank-sdk": "1.2.2",
         "setasign/fpdf": "1.8.1",
         "apache/log4php":"2.3.0"
     }
