@@ -42,7 +42,8 @@ Para acceder a la configuración, debes seguir los siguientes pasos:
 
   ![Paso 3](img/paso6.png)
 
-4. ¡Ya está! Estás en la pantalla de configuración del plugin, podrás ingresar la siguiente información:
+4. ¡Ya está! Estás en la pantalla de configuración del plugin, debes ingresar la siguiente información:
+  * **Activar Onepay**: Al activarlo, Onepay estará disponible como medio de pago. Ten la precaución de que se encuentre marcada esta opción cuando quieras que los usuarios paguen con Onepay.
   * **APIKey**: Es lo que te identifica como comercio.
   * **Shared Secret**: Llave secreta que te autoriza y valida a hacer transacciones.
   * **Endpoint**: Ambiente hacia donde se realiza la transacción. 
