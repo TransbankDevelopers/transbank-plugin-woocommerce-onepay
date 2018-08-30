@@ -140,19 +140,19 @@ class DiagnosticPDF extends FPDF {
         $this->Cell(10, 8, 'Logs');
         $this->Ln(15);
         $logfileLocation = Onepay::logfileLocation();
-        try {
+
+        if (file_exists($logfileLocation)) {
             $logfile = fopen($logfileLocation, "r");
-        }
-        catch(Exception $exception) {
+            while (($line = fgets($logfile)) !== false) {
+                // process the line read.
+                $this->Write(10,  $line);
+                $this->Ln(4);
+            }
+            fclose($logfile);
+        } else {
             $this->Write(10,  'No se pudo acceder a archivo de logs.');
             $this->Ln(4);
         }
-        while (($line = fgets($logfile)) !== false) {
-            // process the line read.
-            $this->Write(10,  $line);
-            $this->Ln(4);
-        }
-        fclose($logfile);
     }
     // Page footer
     function Footer()
