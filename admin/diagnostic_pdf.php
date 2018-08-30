@@ -6,6 +6,11 @@ require(dirname(__FILE__, 5) .'/wp-load.php');
 if (!defined('ABSPATH')) {
     exit;
 }
+
+if (!current_user_can("administrator")) {
+    exit;
+}
+
 class DiagnosticPDF extends FPDF {
     private $info;
     private $op;
