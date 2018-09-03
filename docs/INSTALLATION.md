@@ -53,3 +53,39 @@ Para acceder a la configuración, debes seguir los siguientes pasos:
   Además, puedes generar un documento de diagnóstico en caso que Transbank te lo pida. Para ello, haz click en "Generar PDF de Diagnóstico", y automáticamente se descargará dicho documento.
 
   ![Paso 4](img/paso7.png)
+
+## Credenciales de Prueba
+
+Para el ambiente de Integración, puedes utilizar las siguientes credenciales para la realización de pruebas:
+
+* APIKey: `dKVhq1WGt_XapIYirTXNyUKoWTDFfxaEV63-O5jcsdw`
+* Shared Secret: `?XW#WOLG##FBAGEAYSNQ5APD#JF@$AYZ`
+
+
+## Prueba de instalación con transacción
+
+En ambiente de integración es posible realizar una pruebas de transacción utilizando un emulador de pagos online.
+
+* Para ello, agrega al carro de compras un producto:
+  ![Paso 1](img/emu1.png)
+
+* Luego anda al checkout para iniciar el flujo de pago:
+  ![Paso 2](img/emu2.png)
+  
+* En la página de checkout, primero verifica que Onepay esté disponible como medio de pago. Selecciónalo, y luego realiza la orden de compra para iniciar el pago.
+  ![Paso 3](img/emu3.png)
+
+* Una vez presionado el botón para iniciar la compra, se mostrará la ventana de pago Onepay, tal como se ve en la imagen. Toma nota del número que aparece como "Código de compra", ya que lo necesitarás para emular el pago en el siguiente paso:
+  ![Paso 4](img/emu4.png)
+  
+* En otra ventana del navegador, ingresa al emulador de pagos desde [https://onepay.ionix.cl/mobile-payment-emulator](https://onepay.ionix.cl/mobile-payment-emulator), utiliza test@onepay.cl como correo electrónico, y el código de compra obtenido desde la pantalla anterior. Una vez ingresado los datos solicitados, presiona el botón "Iniciar Pago":
+  ![Paso 5](img/emu5.png)
+  
+* Si todo va bien, el emulador mostrará opciones para simular situaciones distintas. Para simular un pago exitoso, presiona el botón `PRE_AUTHORIZED`. En caso de querer simular un pago fallido, presiona le botón `REJECTED`. Simularemos un pago exitóso presionando el botón `PRE_AUTHORIZED`.
+  ![Paso 6](img/emu6.png)
+  
+* Vuelve a la ventana del navegador donde se encuentra WooCommerce, y podrás comprobar que el pago ha sido exitoso.
+ ![Paso 6](img/emu7.png)
+
+* Automáticamente serás redirigido a WooCommerce, con la comprobación final del pago.
+ ![Paso 7](img/emu8.png)
