@@ -56,7 +56,7 @@ Para acceder a la configuración, debes seguir los siguientes pasos:
 
 ## Credenciales de Prueba
 
-Para el ambiente de Integración, puedes utilizar las siguientes credenciales para la realización de pruebas:
+Para el ambiente de Integración, puedes utilizar las siguientes credenciales para realizar pruebas:
 
 * APIKey: `dKVhq1WGt_XapIYirTXNyUKoWTDFfxaEV63-O5jcsdw`
 * Shared Secret: `?XW#WOLG##FBAGEAYSNQ5APD#JF@$AYZ`
