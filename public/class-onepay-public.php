@@ -100,5 +100,12 @@ class Onepay_Public {
         wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/onepay-public.js', array( 'jquery' ), $this->version, false);
         wp_add_inline_script( $this->plugin_name, 'window.transaction_url ="'.rest_url("onepay/v1/transaction").'";');
         wp_add_inline_script( $this->plugin_name, 'window.commit_url ="'.rest_url("onepay/v1/commit").'";');
+
+        $custom_logo_id = get_theme_mod( 'custom_logo' );
+        $image = wp_get_attachment_image_src( $custom_logo_id , 'full' );
+
+        if ($image[0]) {
+          wp_add_inline_script( $this->plugin_name, 'window.commerce_url ="'.$image[0].'";');
+        }
 	}
 }
