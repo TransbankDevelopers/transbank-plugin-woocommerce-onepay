@@ -38,6 +38,10 @@
                                     endpoint: transaction_url,
                                     callbackUrl: commit_url
                                     };
+
+                                if (window.commerce_url) {
+                                    options.commerceLogo = window.commerce_url;
+                                }
                                 Onepay.checkout(options);
                             } else if ( 'failure' === result.result ) {
                                 throw 'Result failure';
