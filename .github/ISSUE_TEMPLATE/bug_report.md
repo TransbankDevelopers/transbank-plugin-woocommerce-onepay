@@ -28,8 +28,8 @@ If applicable, add screenshots to help explain your problem.
 **Browser (please complete the following information):**
  - Device: [e.g. Desktop, iPhone6]
  - OS: [e.g. Windows, iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+ - Browser: [e.g. chrome, safari]
+ - Version: [e.g. 22]
 
 **Additional context**
 Add any other context about the problem here.
