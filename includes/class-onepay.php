@@ -477,24 +477,26 @@ class Onepay extends WC_Payment_Gateway {
         parent::admin_options();
         ?>
         <style type="text/css">
-            .generate-pdf-button {
+            .generate-pdf-link {
+                text-decoration: none;
+                color: black;
+                border-color: gray;
+                border-style: solid;
+                border-width: thin;
+                padding: 5px;
+                background-image: linear-gradient(#e6e6e6, #FFFFFF);
                 height: 2em;
                 font-weight:  bold;
                 font-size: 1rem;
             }
-            .generate-pdf-link {
-                text-decoration: none;
-                color: black;
-            }
         </style>
         <div>
-            <button class="generate-pdf-button">
-                <a class="generate-pdf-link"
-                   href=<?php echo plugin_dir_url( dirname( __FILE__ ) ) . 'admin/diagnostic_pdf.php' ?>
-                   target="_blank"
-                   rel="noopener"
-                   >Generar PDF de Diagnóstico</a>
-            </button>
+            <br>
+            <a class="generate-pdf-link"
+                href=<?php echo plugin_dir_url( dirname( __FILE__ ) ) . 'admin/diagnostic_pdf.php' ?>
+                target="_blank"
+                rel="noopener"
+                >Generar PDF de Diagnóstico</a>
         </div>
 
         <?php
