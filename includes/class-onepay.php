@@ -7,6 +7,7 @@ use Transbank\Onepay\OnepayBase;
 use Transbank\Onepay\ShoppingCart;
 use Transbank\Onepay\Item;
 use Transbank\Onepay\Transaction;
+use Transbank\Onepay\Options;
 use \Transbank\Onepay\Exceptions\TransactionCreateException;
 use \Transbank\Onepay\Exceptions\TransbankException;
 
@@ -161,16 +162,24 @@ class Onepay extends WC_Payment_Gateway {
      * @since    1.0.0
      */
     function commit_transaction($data) {
+        $endpoint = $this->get_option( 'endpoint' );
+
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
-        OnepayBase::setCurrentIntegrationType($this->get_option( 'endpoint' ));
+        OnepayBase::setCurrentIntegrationType($endpoint);
 
         $order_id = WC()->session->get('order_id');
         $externalUniqueNumber = $data['externalUniqueNumber'];
 
         $order = new WC_Order($order_id);
         try {
-            $transactionCommitResponse = Transaction::commit($data['occ'], $externalUniqueNumber);
+            $options = new Options();
+
+            if ($endpoint == "LIVE") {
+                $options->setAppKey("0E987BA1-39D6-4EB3-8868-636E91D534DA");
+            }
+
+            $transactionCommitResponse = Transaction::commit($data['occ'], $externalUniqueNumber, $options);
 
             $order->update_status('completed');
             $order->payment_complete();
@@ -210,9 +219,10 @@ class Onepay extends WC_Payment_Gateway {
      * @since    1.0.0
      */
     function create_transaction($data) {
+        $endpoint = $this->get_option( 'endpoint' );
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
-        OnepayBase::setCurrentIntegrationType($this->get_option( 'endpoint' ));
+        OnepayBase::setCurrentIntegrationType($endpoint);
 
         self::$logger->info('Creating a transaction');
 
@@ -233,7 +243,12 @@ class Onepay extends WC_Payment_Gateway {
         }
 
         try {
-            $transaction = Transaction::create($carro);
+            $options = new Options();
+            if ($endpoint == "LIVE") {
+                $options->setAppKey("0E987BA1-39D6-4EB3-8868-636E91D534DA");
+            }
+
+            $transaction = Transaction::create($carro, null, null, $options);
             $response = [];
             $response['occ'] = $transaction->getOcc();
             $response['ott'] = $transaction->getOtt();
