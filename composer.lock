@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f339ccd087b1e0a362b30e2552aa1f9",
+    "content-hash": "195243695fafe7c2f1682c3f6636723d",
     "packages": [
         {
             "name": "apache/log4php",
@@ -77,16 +77,16 @@
         },
         {
             "name": "transbank/transbank-sdk",
-            "version": "1.2.2",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TransbankDevelopers/transbank-sdk-php.git",
-                "reference": "98ed4d321e0fbd9a16b11f4b7fcd6700efc45bd4"
+                "reference": "e23af0952184c572bfe5c69a1bccc214a6f0c35a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TransbankDevelopers/transbank-sdk-php/zipball/98ed4d321e0fbd9a16b11f4b7fcd6700efc45bd4",
-                "reference": "98ed4d321e0fbd9a16b11f4b7fcd6700efc45bd4",
+                "url": "https://api.github.com/repos/TransbankDevelopers/transbank-sdk-php/zipball/e23af0952184c572bfe5c69a1bccc214a6f0c35a",
+                "reference": "e23af0952184c572bfe5c69a1bccc214a6f0c35a",
                 "shasum": ""
             },
             "require": {
@@ -123,7 +123,7 @@
                 "sdk",
                 "transbank"
             ],
-            "time": "2018-08-30T18:42:45+00:00"
+            "time": "2018-09-11T17:49:45+00:00"
         }
     ],
     "packages-dev": [],
