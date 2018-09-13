@@ -168,9 +168,10 @@ class Onepay extends WC_Payment_Gateway {
         $order_id = WC()->session->get('order_id');
         $externalUniqueNumber = $data['externalUniqueNumber'];
 
+        $order = new WC_Order($order_id);
         try {
             $transactionCommitResponse = Transaction::commit($data['occ'], $externalUniqueNumber);
-            $order = new WC_Order($order_id);
+
             $order->update_status('completed');
             $order->payment_complete();
             $order->reduce_order_stock();
@@ -190,7 +191,7 @@ class Onepay extends WC_Payment_Gateway {
         catch (TransbankException $transbank_exception) {
             self::$logger->error('Confirmación de transacción fallida: ' . $transbank_exception->getMessage());
             $order->update_status('cancelled');
-            wc_add_notice( __('Payment error:', 'woothemes') . 'Ha ocurrido un error con el pago, reintente nuevamente', 'error' );
+            wc_add_notice( __('Error: ', 'woothemes') . 'Ha ocurrido un error con el pago, reintente nuevamente', 'error' );
 
             if ( wp_redirect($order->get_cancel_order_url_raw()) ) {
                 exit;
