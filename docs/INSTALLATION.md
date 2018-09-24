@@ -6,7 +6,7 @@ Este plugin oficial ha sido creado para que puedas integrar Onepay fácilmente e
 
 ## Requisitos
 
-Ud. debe tener instalado previamente Wordpress, y WooCommerce.
+Debes tener instalado previamente Wordpress, y WooCommerce.
 
 ## Instalación de Plugin
 
