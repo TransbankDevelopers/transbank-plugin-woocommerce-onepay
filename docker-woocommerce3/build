@@ -1,13 +1,3 @@
 #!/usr/bin/env bash
-docker-compose build && docker-compose up && \
-echo "
-========================================
-
-      🌎 Web server: http://localhost:8080
-
-      ⚙️ Admin: http://localhost:8080/wp-admin
-
-            user: onepay
-            password: onepay
-
-========================================"
+docker-compose build
+bash start
