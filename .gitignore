@@ -26,3 +26,5 @@ ehthumbs_vista.db
 [Dd]esktop.ini
 
 vendor
+
+docker-woocommerce3/init.sh
