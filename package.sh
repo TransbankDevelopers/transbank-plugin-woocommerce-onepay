@@ -9,6 +9,7 @@ then
 fi
 
 composer install --no-dev
+composer update --no-dev
 
 SRC_DIR="."
 FILE1="onepay.php"
