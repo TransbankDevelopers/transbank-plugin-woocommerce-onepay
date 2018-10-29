@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-docker-compose up && \
+docker-compose build && docker-compose up && \
 echo "
 ========================================
 
