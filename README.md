@@ -19,10 +19,6 @@ El manual de instalación para el usuario final se encuentra disponible [acá](d
 * Wordpress
 * WooCommerce 3.2 o superior
 
-## Nota  
-- La versión del sdk de php se encuentra en el archivo `composer.json`
-- La versión del sdk de javascript se encuentra en el archivo `public/js/onepay-public.js`
-
 ## Dependencias
 
 El plugin depende de las siguientes librerías:
@@ -32,6 +28,10 @@ El plugin depende de las siguientes librerías:
 * apache/log4php
 
 Para cumplir estas dependencias, debes instalar [Composer](https://getcomposer.org), e instalarlas con el comando `composer install`.
+
+## Nota  
+- La versión del sdk de php se encuentra en el archivo `composer.json`
+- La versión del sdk de javascript se encuentra en el archivo `public/js/onepay-public.js`
 
 ## Desarrollo
 
