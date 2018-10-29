@@ -31,7 +31,7 @@ De forma automática se creará una imagen Wordpress, se instalará WooCommerce 
 
 Para instalar Woocommerce, hacer lo siguiente:
 
-**NOTA:** La primera vez que se ejecuta ./start o ./build demorará en instalar todo woocommerce, esperar al menos unos 5 minutos.
+**NOTA:** La primera vez que se ejecuta ./start o ./build demorará en instalar todo, esperar al menos unos 5 minutos.
 
 ### Construir el contenedor desde cero
 
