@@ -4,6 +4,11 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2018-10-29
+### Changed
+- Se actualiza sdk js a versión 1.5.8
+- Se actualiza sdk php a versión 1.4.1
+- 
 ## [1.0.6] - 2018-09-27
 ### Changed
 - Actualiza SDK JS de Onepay a la versión 1.5.3
