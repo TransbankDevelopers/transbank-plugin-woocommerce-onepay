@@ -37,20 +37,7 @@ Para cumplir estas dependencias, debes instalar [Composer](https://getcomposer.o
 
 Para apoyar el levantamiento rápido de un ambiente de desarrollo, hemos creado la especificación de contenedores a través de Docker Compose.
 
-Para usarlo, debes tener Docker y Docker Compose instalado en tu máquina, para luego ejecutar:
-
-```bash
-docker-compose up
-```
-
-De forma automática se creará una imagen Wordpress, se instalará WooCommerce con el tema Storefront, se creará un producto de ejemplo y finalmente se activará este plugin. Para acceder debes dirigir tu navegador hacia `http://localhost:8080`.
-
-
-Los datos de acceso a la administración son los siguientes:
-
-* Url: http://localhost:8080/wp-admin
-* Usuario: onepay
-* Contraseña: onepay
+Para usarlo seguir el siguiente [README Woocommerce 3.x](./docker-woocommerce3)
 
 ## Generar una nueva versión
 

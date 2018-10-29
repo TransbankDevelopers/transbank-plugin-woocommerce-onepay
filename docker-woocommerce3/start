@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+cp -rf ../init.sh .
+cp -rf ../*.php .
+cp -rf ../composer.json .
+cp -rf ../composer.lock .
+cp -rf ../admin .
+cp -rf ../includes .
+cp -rf ../languages .
+cp -rf ../public .
+cp -rf ../vendor .
+
+docker-compose up -d && \
+echo "
+========================================
+
+      🌎 Web server: http://localhost:8080
+
+      ⚙️ Admin: http://localhost:8080/wp-admin
+
+            user: onepay
+            password: onepay
+
+========================================"
+
+rm -rf ./init.sh
+rm -rf ./*.php
+rm -rf ./composer.json
+rm -rf ./composer.lock
+rm -rf ./admin
+rm -rf ./includes
+rm -rf ./languages
+rm -rf ./public
+rm -rf ./vendor
