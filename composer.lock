@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "195243695fafe7c2f1682c3f6636723d",
+    "content-hash": "e5765516bd3ccd85e94e11d08a2acb20",
     "packages": [
         {
             "name": "apache/log4php",
@@ -77,23 +77,23 @@
         },
         {
             "name": "transbank/transbank-sdk",
-            "version": "1.3.1",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TransbankDevelopers/transbank-sdk-php.git",
-                "reference": "e23af0952184c572bfe5c69a1bccc214a6f0c35a"
+                "reference": "510a9ae5eee789a5eda8409c9e5a6c763932faaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TransbankDevelopers/transbank-sdk-php/zipball/e23af0952184c572bfe5c69a1bccc214a6f0c35a",
-                "reference": "e23af0952184c572bfe5c69a1bccc214a6f0c35a",
+                "url": "https://api.github.com/repos/TransbankDevelopers/transbank-sdk-php/zipball/510a9ae5eee789a5eda8409c9e5a6c763932faaf",
+                "reference": "510a9ae5eee789a5eda8409c9e5a6c763932faaf",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "php": ">=5.4.0"
+                "php": ">=5.5.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.0",
@@ -104,11 +104,15 @@
             "autoload": {
                 "psr-4": {
                     "Transbank\\Onepay\\": [
-                        "lib/",
-                        "lib/utils"
+                        "lib/onepay",
+                        "lib/onepay/utils"
                     ],
                     "Transbank\\Onepay\\Exceptions\\": [
-                        "lib/exceptions"
+                        "lib/onepay/exceptions"
+                    ],
+                    "Transbank\\Webpay\\": [
+                        "lib/webpay",
+                        "lib/webpay/soap"
                     ]
                 }
             },
@@ -123,7 +127,7 @@
                 "sdk",
                 "transbank"
             ],
-            "time": "2018-09-11T17:49:45+00:00"
+            "time": "2018-10-29T01:46:12+00:00"
         }
     ],
     "packages-dev": [],
