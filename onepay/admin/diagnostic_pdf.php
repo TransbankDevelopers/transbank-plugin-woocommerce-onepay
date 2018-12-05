@@ -1,7 +1,9 @@
 <?php
-require(dirname(__FILE__, 2) .'/vendor/setasign/fpdf/fpdf.php');
-require(dirname(__FILE__, 5) .'/wp-blog-header.php');
-require(dirname(__FILE__, 5) .'/wp-load.php');
+require_once(dirname(dirname(__FILE__)) .'/vendor/setasign/fpdf/fpdf.php');
+
+$ROOT_DIR = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+require_once($ROOT_DIR .'/wp-blog-header.php');
+require_once($ROOT_DIR .'/wp-load.php');
 
 if (!defined('ABSPATH')) {
     exit;
@@ -12,8 +14,10 @@ if (!current_user_can("administrator")) {
 }
 
 class DiagnosticPDF extends FPDF {
+
     private $info;
     private $op;
+
     public function __construct() {
         $this->info = $this->phpinfo2array();
         $this->op = Onepay::getInstance();
