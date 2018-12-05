@@ -6,7 +6,7 @@ services:
     image: wordpress
     volumes:
       - data:/var/www/html
-      - ..:/var/www/html/wp-content/plugins/onepay
+      - ../onepay:/var/www/html/wp-content/plugins/onepay
     environment:
       WOOCOMMERCE_VERSION: 2.5.5
       WORDPRESS_DB_PASSWORD: example
@@ -27,7 +27,7 @@ services:
     build: .
     volumes:
       - data:/var/www/html
-      - ..:/var/www/html/wp-content/plugins/onepay
+      - ../onepay:/var/www/html/wp-content/plugins/onepay
     depends_on:
       - webserver
       - dbserver
