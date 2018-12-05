@@ -219,10 +219,35 @@ class Onepay extends WC_Payment_Gateway {
      * @since    1.0.0
      */
     function create_transaction($data) {
+
+        if (isset($_POST['config']) && $_POST['config'] == 'true') {
+
+            $cart_item = WC()->cart->get_cart();
+
+            $transactionDescription = '';
+
+            if (count($cart_item) == 1) {
+                foreach ( WC()->cart->get_cart() as $cart_item ) {
+                    $transactionDescription = strval($cart_item['data']->get_title());
+                    break;
+                }
+            }
+
+            $response = array(
+                'transactionDescription' => $transactionDescription
+            );
+
+            return $response;
+        }
+
         $endpoint = $this->get_option( 'endpoint' );
+
+        $callbackUrl = rest_url("onepay/v1/commit");
+
         OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
         OnepayBase::setApiKey($this->get_option( 'apikey' ));
         OnepayBase::setCurrentIntegrationType($endpoint);
+        OnepayBase::setCallbackUrl($callbackUrl);
 
         self::$logger->info('Creating a transaction');
 
@@ -260,7 +285,7 @@ class Onepay extends WC_Payment_Gateway {
             return $response;
         }
         catch (TransbankException $transbank_exception) {
-            $msg =  $transbank_exception->getMessage();
+            $msg = $transbank_exception->getMessage();
             self::$logger->error("Creación de Transacción fallida: " . $msg);
             throw new TransactionCreateException($msg);
         }
