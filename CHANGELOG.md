@@ -4,6 +4,12 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.10] - 2018-12-06
+### Fixed
+- Corrige compatibilidad con la app de Onepay cuando se compra mediante un dispositivo móvil.
+### Added
+- Agrega uso de `transactionDescription` cuando el carro tiene un item
+
 ## [1.0.9] - 2018-11-28
 ### Fixed
 - Corrige visualización errónea del botón de instalación de Onepay desde el App Store, que impedía que los usuarios pudieran descargar la aplicación si no la tenían instalada
