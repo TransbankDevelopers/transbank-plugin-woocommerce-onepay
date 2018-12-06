@@ -54,3 +54,20 @@ cd docker-php5.6
     user: admin
     password: admin
 
+## Extras para usar ngrok y probar en dominio virtual especialmente para emular producción
+
+1.- Ejecutar ngrok
+
+    ngrok http 8082
+
+2.- Modificar el archivo `init.sh` y reconstruir el docker
+
+    --url=URL_DADA_POR_NGROK
+
+    Ej: --url=c0c8db10.ngrok.io
+
+3.- Entrar al docker con `./shell` y agregar estas lineas a `wp-config.php`:
+
+    define('WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST']);
+    define('WP_HOME', 'http://' . $_SERVER['HTTP_HOST']);
+
