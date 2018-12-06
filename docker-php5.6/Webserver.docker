@@ -1,6 +1,4 @@
-FROM wordpress:cli
-USER root
-RUN apk add --no-cache openssl less zip unzip git
+FROM wordpress:4.9.8-php5.6-apache
 
 RUN php -r "copy('https://composer.github.io/installer.sig', '/composer-setup.sig');"
 RUN php -r "copy('https://getcomposer.org/installer', '/composer-setup.php');"
@@ -9,12 +7,7 @@ RUN php /composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN php -r "unlink('/composer-setup.php');"
 RUN php -r "unlink('/composer-setup.sig');"
 
-ENV DOCKERIZE_VERSION v0.6.1
-RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-
-USER xfs
-
-ADD init.sh /
-WORKDIR /var/www/html/wp-content/plugins/onepay
+# install the PHP extensions we need
+RUN apt-get update && apt-get install -y zip unzip zlib1g-dev wget libxml2-dev nano
+RUN docker-php-ext-install zip
+RUN docker-php-ext-install soap

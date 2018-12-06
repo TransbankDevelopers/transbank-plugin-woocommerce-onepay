@@ -17,7 +17,7 @@
         p.insertBefore(s, t);
     })(false, document, "https://unpkg.com/transbank-onepay-frontend-sdk@1.5/lib/merchant.onepay.min.js",
         "script",window, function () {
-            console.log("Onepay JS library successfully loaded.");
+
             var checkout_form = jQuery( 'form.checkout' );
             checkout_form.on( 'checkout_place_order_onepay', function() {
                 checkout_form.find( '.input-text, select, input:checkbox' ).trigger( 'validate' );
@@ -27,22 +27,37 @@
                 }
 
                 jQuery.ajax({
-					type:		'POST',
-					url:		wc_checkout_params.checkout_url,
-					data:		checkout_form.serialize(),
-					dataType:   'json',
-					success:	function( result ) {
+					type: 'POST',
+					url: wc_checkout_params.checkout_url,
+					data: checkout_form.serialize(),
+					dataType: 'json',
+					success: function( result ) {
                         try {
                             if ( 'success' === result.result ) {
-                                var options = {
-                                    endpoint: transaction_url,
-                                    callbackUrl: commit_url
-                                    };
 
-                                if (window.commerce_url) {
-                                    options.commerceLogo = window.commerce_url;
-                                }
-                                Onepay.checkout(options);
+                                jQuery.ajax({
+                                    type: 'POST',
+                                    url: transaction_url,
+                                    data: {
+                                        config: true
+                                    },
+                                    dataType: 'json',
+                                    success: function(config) {
+
+                                        var options = {
+                                            endpoint: transaction_url,
+                                            callbackUrl: commit_url,
+                                            transactionDescription: config.transactionDescription || ''
+                                        };
+
+                                        if (window.commerce_url) {
+                                            options.commerceLogo = window.commerce_url;
+                                        }
+
+                                        Onepay.checkout(options);
+                                    }
+                                });
+
                             } else if ( 'failure' === result.result ) {
                                 throw 'Result failure';
                             } else {
@@ -53,7 +68,6 @@
 								window.location.reload();
 								return;
                             }
-
                             jQuery( ".form-row:first" ).addClass( 'woocommerce-invalid' );
                             checkout_form.submit();
 						}

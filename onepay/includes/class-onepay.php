@@ -162,10 +162,13 @@ class Onepay extends WC_Payment_Gateway {
      * @since    1.0.0
      */
     function commit_transaction($data) {
-        $endpoint = $this->get_option( 'endpoint' );
 
-        OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
-        OnepayBase::setApiKey($this->get_option( 'apikey' ));
+        $endpoint = $this->get_option('endpoint');
+        $apiKey = $this->get_option('apikey');
+        $sharedSecret = $this->get_option('shared_secret');
+
+        OnepayBase::setApiKey($apiKey);
+        OnepayBase::setSharedSecret($sharedSecret);
         OnepayBase::setCurrentIntegrationType($endpoint);
 
         $order_id = WC()->session->get('order_id');
@@ -173,7 +176,8 @@ class Onepay extends WC_Payment_Gateway {
 
         $order = new WC_Order($order_id);
         try {
-            $options = new Options();
+
+            $options = new Options($apiKey, $sharedSecret);
 
             if ($endpoint == "LIVE") {
                 $options->setAppKey("0E987BA1-39D6-4EB3-8868-636E91D534DA");
@@ -219,10 +223,37 @@ class Onepay extends WC_Payment_Gateway {
      * @since    1.0.0
      */
     function create_transaction($data) {
-        $endpoint = $this->get_option( 'endpoint' );
-        OnepayBase::setSharedSecret($this->get_option( 'shared_secret' ));
-        OnepayBase::setApiKey($this->get_option( 'apikey' ));
+
+        if (isset($_POST['config']) && $_POST['config'] == 'true') {
+
+            $cart_item = WC()->cart->get_cart();
+
+            $transactionDescription = '';
+
+            if (count($cart_item) == 1) {
+                foreach ( WC()->cart->get_cart() as $cart_item ) {
+                    $transactionDescription = strval($cart_item['data']->get_title());
+                    break;
+                }
+            }
+
+            $response = array(
+                'transactionDescription' => $transactionDescription
+            );
+
+            return $response;
+        }
+
+        $channel = isset($_POST['channel']) ? $_POST['channel'] : null;
+        $endpoint = $this->get_option('endpoint');
+        $apiKey = $this->get_option('apikey');
+        $sharedSecret = $this->get_option( 'shared_secret' );
+        $callbackUrl = rest_url("onepay/v1/commit");
+
+        OnepayBase::setApiKey($apiKey);
+        OnepayBase::setSharedSecret($sharedSecret);
         OnepayBase::setCurrentIntegrationType($endpoint);
+        OnepayBase::setCallbackUrl($callbackUrl);
 
         self::$logger->info('Creating a transaction');
 
@@ -243,12 +274,14 @@ class Onepay extends WC_Payment_Gateway {
         }
 
         try {
-            $options = new Options();
+
+            $options = new Options($apiKey, $sharedSecret);
+
             if ($endpoint == "LIVE") {
                 $options->setAppKey("0E987BA1-39D6-4EB3-8868-636E91D534DA");
             }
 
-            $transaction = Transaction::create($carro, null, null, $options);
+            $transaction = Transaction::create($carro, $channel, $options);
             $response = [];
             $response['occ'] = $transaction->getOcc();
             $response['ott'] = $transaction->getOtt();
@@ -260,7 +293,7 @@ class Onepay extends WC_Payment_Gateway {
             return $response;
         }
         catch (TransbankException $transbank_exception) {
-            $msg =  $transbank_exception->getMessage();
+            $msg = $transbank_exception->getMessage();
             self::$logger->error("Creación de Transacción fallida: " . $msg);
             throw new TransactionCreateException($msg);
         }
@@ -548,7 +581,7 @@ class Onepay extends WC_Payment_Gateway {
         WC()->session->set('order_id', $order_id);
         return array(
             'result'    => 'success',
-            'redirect'  => WC()->cart->get_checkout_url()
+            'redirect'  => wc_get_cart_url()
         );
     }
 

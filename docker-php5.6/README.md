@@ -2,7 +2,7 @@
 
 #  Woocommerce Docker para desarrollo
 
-### PHP 7.2 + Mysql + Woocommerce 3.2
+### PHP 5.6 + Mysql + Woocommerce 3.4.0
 
 ### Requerimientos
 
@@ -18,13 +18,6 @@ Instalar [Docker](https://docs.docker.com/docker-for-windows/install/), [Docker-
 
 Instalar [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/) y [Docker-compose](https://docs.docker.com/compose/install/#install-compose).
 
-### Bajar dependencias del proyecto
-
-```
-cd ..
-composer install && composer update
-```
-
 ### Como usar
 
 De forma automática se creará una imagen Wordpress, se instalará WooCommerce con el tema Storefront, se creará un producto de ejemplo y finalmente se activará este plugin.
@@ -36,6 +29,7 @@ Para instalar Woocommerce, hacer lo siguiente:
 ### Construir el contenedor desde cero
 
 ```
+cd docker-php5.6
 ./build
 ```
 
@@ -53,10 +47,27 @@ Para instalar Woocommerce, hacer lo siguiente:
 
 ### Paneles
 
-**Web server:** http://localhost:8080
+**Web server:** http://localhost:8082
 
-**Admin:** http://localhost:8080/wp-admin
+**Admin:** http://localhost:8082/wp-admin
 
-    user: onepay
-    password: onepay
+    user: admin
+    password: admin
+
+## Extras para usar ngrok y probar en dominio virtual especialmente para emular producción
+
+1.- Ejecutar ngrok y obtener la url dada por ngrok en `Forwarding` http
+
+    ngrok http 8082
+
+2.- Modificar el archivo `init.sh` y reconstruir el docker
+
+    --url=URL_DADA_POR_NGROK
+
+    Ej: --url=c0c8db10.ngrok.io
+
+3.- Entrar al docker con `./shell` y agregar estas lineas a `wp-config.php`:
+
+    define('WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST']);
+    define('WP_HOME', 'http://' . $_SERVER['HTTP_HOST']);
 
