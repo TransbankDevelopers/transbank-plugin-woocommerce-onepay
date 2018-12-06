@@ -7,6 +7,7 @@ wp --allow-root plugin activate onepay
 wp --allow-root wc tool run install_pages --user=admin
 wp --allow-root wc product create --name="Zapatos deportivos" --sku=1 --regular_price=1000 --status=publish --user=admin
 wp --allow-root wc product create --name="Zapatos formales" --sku=2 --regular_price=1500 --status=publish --user=admin
+wp --allow-root wc product create --name="Pelota" --sku=3 --regular_price=3 --status=publish --user=admin
 wp --allow-root theme install storefront
 wp --allow-root theme activate storefront
 wp --allow-root wc payment_gateway update onepay --enabled=true  --user=admin
