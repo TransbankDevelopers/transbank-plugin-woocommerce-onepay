@@ -56,7 +56,7 @@ cd docker-php5.6
 
 ## Extras para usar ngrok y probar en dominio virtual especialmente para emular producción
 
-1.- Ejecutar ngrok
+1.- Ejecutar ngrok y obtener la url dada por ngrok en `Forwarding` http
 
     ngrok http 8082
 
