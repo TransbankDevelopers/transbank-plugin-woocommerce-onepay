@@ -4,6 +4,10 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2019-02-18
+### Changed
+- Al recibir el pago de forma exitósa, el estado de la compra pasa a "Processing" en vez de "Completed".
+
 ## [1.0.10] - 2018-12-06
 ### Fixed
 - Corrige compatibilidad con la app de Onepay cuando se compra mediante un dispositivo móvil.
