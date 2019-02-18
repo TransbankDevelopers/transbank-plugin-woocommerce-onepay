@@ -185,7 +185,7 @@ class Onepay extends WC_Payment_Gateway {
 
             $transactionCommitResponse = Transaction::commit($data['occ'], $externalUniqueNumber, $options);
 
-            $order->update_status('completed');
+            $order->update_status('processing');
             $order->payment_complete();
             $order->reduce_order_stock();
             WC()->cart->empty_cart();
