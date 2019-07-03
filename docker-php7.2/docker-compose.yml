@@ -1,0 +1,17 @@
+version: '3.3'
+
+service:
+  database:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testdb
+      MYSQL_PASSWORD: testdb
+    ports:
+      - "9906:3306"
+  webserver:
+    image: php:7.2.2-apache
+    container_name: php_web
+    depends_on:
+      - database
