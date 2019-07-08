@@ -162,7 +162,12 @@ class Onepay extends WC_Payment_Gateway {
      * @since    1.0.0
      */
     function commit_transaction($data) {
-
+        if(WC()->session == null) {
+            WC()->frontend_includes();
+            WC()->session = new WC_Session_Handler();
+            WC()->session->init();
+            wc_load_cart();
+        }
         $endpoint = $this->get_option('endpoint');
         $apiKey = $this->get_option('apikey');
         $sharedSecret = $this->get_option('shared_secret');
@@ -223,6 +228,11 @@ class Onepay extends WC_Payment_Gateway {
      * @since    1.0.0
      */
     function create_transaction($data) {
+
+        if (wc()->cart == null) {
+            wc()->frontend_includes();
+            wc_load_cart();
+        }
 
         if (isset($_POST['config']) && $_POST['config'] == 'true') {
 
