@@ -1,6 +1,6 @@
 composer install
 wp --allow-root --allow-root core install --url=localhost:8082 --title=transbank --admin_user=admin --admin_password=admin --admin_email=transbankdevelopers@continuum.cl
-wp --allow-root plugin install woocommerce --version=3.4.0
+wp --allow-root plugin install woocommerce --version=3.6.4
 wp --allow-root plugin activate woocommerce
 wp --allow-root plugin activate onepay
 
