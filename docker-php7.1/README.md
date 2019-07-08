@@ -45,6 +45,14 @@ cd docker-php7.1
 ./shell
 ```
 
+### Importante corregir permisos del directorio para instalar el plugin mediante zip
+
+```
+./shell root
+chown -R www-data:www-data /var/www/html/wp-content
+```
+
+
 ### Paneles
 
 **Web server:** http://localhost:8082
