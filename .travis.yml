@@ -1,19 +1,16 @@
 language: php
 php:
 - '5.5'
-
 script: echo "We don't have tests yet :("
-
 before_deploy:
-  - sh package.sh
-
+- sh package.sh
 deploy:
   provider: releases
   name: "$TRAVIS_TAG"
   api_key:
-    secure: e9pwKV/i+P+jkKh6ImzuxoJngvCdVjACpmdNiUreo/UjTdVp2yHX91q97T08o7L+vZCc6XV0zlxCsckRMsysCIGR+utTcYe1HbpbvDkwPSI830AbEhlHm9aEWTsF5JLYB/qADyN/XIo+CLBT4ZVx3AjCt/piXL/BBkF6Sf4mxnhvYpGfy00yHqfs+rcAHRhUrfySQJ8ka3BD1qH9GUQ5/bijH5mrgK5ebxacivwUMoKDmrSq4lB66+n/GmEfEJdBUovTPO1NPhEFGHeU1RuuuKZA7qGtKqpVn2Tz80K73hQHW19yLH0HiuNCSyQ709wipoKX7DfcrAHHiXVGcI/iZT+4y/Afb/hWt7qSsB07EzfXPVrK9Zw9wLLKLr7nUv47IUNOKpZMfKdimV/73QWninqGRkBTnAZXQMPtnJQdPPGrDIpHciuiV2dbPJsH+NLPj8ABl1IYnhS6d0kxt7eY6WvCo8mAjIVb5juU8lyR0CwtaFY2UeJmje3Jqmui4B14FwzbCpoUKhRU6oM932PGnT6fEGOEEzQVLZ+Aq9Y0fFZLGYySo4rqlXycp7TFynVQ26y09HX85bjLw3SV22G6IdBkp/zd2uynrmNTiP577DwIFQI5zrO5lp7+mkviklOjM9E+X8s9m70e/DDwrs5qVjnKNZV68QLM0SoX28UmgoA=
-  file: "plugin-woocommerce-onepay-$TRAVIS_TAG.zip"
+    secure: pLpyVQ9gDDBKtIU1fa1mF7s/lUkTEuVroJuUxu0z723iAaYMGSKsXuRj85WnMxTwHca2yxee9xDQcOtcQOFlDvEfMV9IiKU5GjlTw7TbM2xeYeSar7dV9a59FRoAnmvbhuPxB2pe40VPH0Hnd766ijMEodQE0rbiOzHpbpgL9m74jWpIVY2LfJQrysnozSsRpsFGnIh5w7ArgMmzCwJTXqDIp+7PjJSi5vZ/kvjzDO58uMgwq94Qiwrl9rQScM4YgN/OI8/W1r6IiaFlNvfgDdc8nAfGbGI0zbHDvTfGtByh3SaEmyhFqCOBo5MIeo64lbcwxwSR5conguOXCyfwF3P+ps5aBiQH5b8R6fhyNMupDiS5lKOTQiG24NQxMnV2fzn8rG5SbXOetjuIBGwggsHuCb9rHuajxyJhFHyiA906ZZu/bThkjM2XljTKMTBml4pdfwxo8m1egI5cxiNUBW51I4QjA9tkrIHbeajRJr9O+dfTf9mePLIubB/e5VEodrssQABejO89A6VVYRtZzVU67oJdt8Bw9H437xjv2/J9AfUOsNcDK2SiR4prqr1jiRejY9eT3NTKt5gpe0VblJcbz3EmzvTZkzUrBeqOTEujmw1HomPMs+RAENry0RS1ipNXEbhYv73S5xRBHorbwC8kfkGDy1b8dCMtsZNo2X8=
+  file: plugin-woocommerce-onepay-$TRAVIS_TAG.zip
   skip_cleanup: true
   on:
     repo: TransbankDevelopers/transbank-plugin-woocommerce-onepay
-    tags: true 
+    tags: true
