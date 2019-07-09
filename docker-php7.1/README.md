@@ -2,7 +2,7 @@
 
 #  Woocommerce Docker para desarrollo
 
-### PHP 5.6 + Mysql + Woocommerce 3.4.0
+### PHP 7.1 + Mysql + Woocommerce  3.6.4
 
 ### Requerimientos
 
@@ -29,7 +29,7 @@ Para instalar Woocommerce, hacer lo siguiente:
 ### Construir el contenedor desde cero
 
 ```
-cd docker-php5.6
+cd docker-php7.1
 ./build
 ```
 
@@ -51,6 +51,7 @@ cd docker-php5.6
 ./shell root
 chown -R www-data:www-data /var/www/html/wp-content
 ```
+
 
 ### Paneles
 
