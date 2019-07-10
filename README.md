@@ -4,7 +4,7 @@ Plugin oficial de Woocommerce para Onepay
 
 ## Descripción
 
-Este plugin de WooCommerce implementa el [SDK PHP de Onepay](https://github.com/TransbankDevelopers/transbank-sdk-php) en modalidad Checkout. 
+Este plugin de WooCommerce implementa el [SDK PHP de Onepay](https://github.com/TransbankDevelopers/transbank-sdk-php) en modalidad Checkout.
 
 ## Demostración
 
@@ -14,7 +14,7 @@ Este plugin de WooCommerce implementa el [SDK PHP de Onepay](https://github.com/
 El manual de instalación para el usuario final se encuentra disponible [acá](docs/INSTALLATION.md), y además puedes descargarlo como PDF desde [acá](https://github.com/TransbankDevelopers/transbank-plugin-woocommerce-onepay/raw/master/docs/INSTALLATION.pdf
 )
 
-## Requisitos 
+## Requisitos
 * PHP 5.6 o superior
 * Wordpress
 * WooCommerce 3.2 o superior
@@ -37,7 +37,10 @@ Para cumplir estas dependencias, debes instalar [Composer](https://getcomposer.o
 
 Para apoyar el levantamiento rápido de un ambiente de desarrollo, hemos creado la especificación de contenedores a través de Docker Compose.
 
-Para usarlo seguir el siguiente [README Woocommerce 3.x](./docker-woocommerce3)
+Para testear los ejemplos estos estan disponibles en:
+- [woocommerce php 5.6](./docker-php5.6)
+- [woocommerce php 7.1](./docker-php7.1)
+- [woocommerce php 7.2](./docker-php7.2)
 
 ## Generar una nueva versión
 
