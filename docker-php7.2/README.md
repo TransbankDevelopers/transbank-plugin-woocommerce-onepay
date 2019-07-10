@@ -2,7 +2,7 @@
 
 #  Woocommerce Docker para desarrollo
 
-### PHP 7.1 + Mysql + Woocommerce  3.6.4
+### PHP 7.2 + Mysql + Woocommerce  3.6.4
 
 ### Requerimientos
 
