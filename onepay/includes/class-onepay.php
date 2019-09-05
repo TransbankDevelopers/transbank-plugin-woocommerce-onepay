@@ -179,7 +179,7 @@ class Onepay extends WC_Payment_Gateway {
         OnepayBase::setCurrentIntegrationType($endpoint);
         $externalUniqueNumber = $data['externalUniqueNumber'];
         $occ = $data['occ'];
-        $sql = "SELECT post_id FROM wp_postmeta WHERE meta_key = 'occ' AND meta_value = ". $occ;
+        $sql = 'SELECT post_id FROM wp_postmeta WHERE meta_key = \'occ\' AND meta_value = ' . $occ;
         $result = $wpdb->get_results($sql);
         $order_id = $result[0]->post_id;
         $order = new WC_Order($order_id);
