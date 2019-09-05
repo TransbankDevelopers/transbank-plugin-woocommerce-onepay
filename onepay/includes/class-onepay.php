@@ -162,6 +162,8 @@ class Onepay extends WC_Payment_Gateway {
      * @since    1.0.0
      */
     function commit_transaction($data) {
+        global $wpdb;
+
         if(WC()->session == null) {
             WC()->frontend_includes();
             WC()->session = new WC_Session_Handler();
@@ -175,10 +177,11 @@ class Onepay extends WC_Payment_Gateway {
         OnepayBase::setApiKey($apiKey);
         OnepayBase::setSharedSecret($sharedSecret);
         OnepayBase::setCurrentIntegrationType($endpoint);
-
-        $order_id = WC()->session->get('order_id');
         $externalUniqueNumber = $data['externalUniqueNumber'];
-
+        $occ = $data['occ'];
+        $sql = "SELECT post_id FROM wp_postmeta WHERE meta_key = 'occ' AND meta_value = ". $occ;
+        $result = $wpdb->get_results($sql);
+        $order_id = $result[0]->post_id;
         $order = new WC_Order($order_id);
         try {
 
@@ -190,12 +193,13 @@ class Onepay extends WC_Payment_Gateway {
 
             $transactionCommitResponse = Transaction::commit($data['occ'], $externalUniqueNumber, $options);
 
-            $order->update_status('processing');
             $order->payment_complete();
             $order->reduce_order_stock();
-            WC()->cart->empty_cart();
 
-            update_post_meta($order_id, 'occ', $transactionCommitResponse->getOcc());
+            if(WC()->cart) {
+                WC()->cart->empty_cart();
+            }
+
             update_post_meta($order_id, 'externalUniqueNumber', $externalUniqueNumber);
             update_post_meta($order_id, 'buyOrder', $transactionCommitResponse->getBuyOrder());
             update_post_meta($order_id, 'description', $transactionCommitResponse->getDescription());
@@ -205,6 +209,7 @@ class Onepay extends WC_Payment_Gateway {
             update_post_meta($order_id, 'issuedAt', $transactionCommitResponse->getIssuedAt());
             update_post_meta($order_id, 'authorizationCode', $transactionCommitResponse->getAuthorizationCode());
             update_post_meta($order_id, 'signature', $transactionCommitResponse->getSignature());
+
         }
         catch (TransbankException $transbank_exception) {
             self::$logger->error('Confirmación de transacción fallida: ' . $transbank_exception->getMessage());
@@ -215,7 +220,9 @@ class Onepay extends WC_Payment_Gateway {
                 exit;
             }
         }
-        WC()->session->set('order_id', null);
+        if(WC()->session !== null) {
+            WC()->session->set('order_id', null);
+        }
 
         if ( wp_redirect($order->get_checkout_order_received_url()) ) {
             exit;
@@ -228,7 +235,6 @@ class Onepay extends WC_Payment_Gateway {
      * @since    1.0.0
      */
     function create_transaction($data) {
-
         if (wc()->cart == null) {
             wc()->frontend_includes();
             wc_load_cart();
@@ -300,6 +306,9 @@ class Onepay extends WC_Payment_Gateway {
             $response['issuedAt'] = $transaction->getIssuedAt();
             $response['signature'] = $transaction->getSignature();
             $response['amount'] = $carro->getTotal();
+            $order_id = WC()->session->get('order_id');
+            update_post_meta($order_id, 'occ', $transaction->getOcc());
+
             return $response;
         }
         catch (TransbankException $transbank_exception) {
