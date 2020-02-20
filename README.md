@@ -41,6 +41,8 @@ Para testear los ejemplos estos estan disponibles en:
 - [woocommerce php 5.6](./docker-php5.6)
 - [woocommerce php 7.1](./docker-php7.1)
 - [woocommerce php 7.2](./docker-php7.2)
+- [woocommerce php 7.3](./docker-php7.3)
+- [woocommerce php 7.4](./docker-php7.4)
 
 ## Generar una nueva versión
 
